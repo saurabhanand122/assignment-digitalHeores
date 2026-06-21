@@ -184,12 +184,16 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
           </div>
         )}
 
-        {/* Education & Certifications (Two Column) */}
+        {/* Education & Certifications (Two Column or Full Width) */}
         {(education.length > 0 || certifications.length > 0 || achievements.length > 0) && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '2rem' }}>
+          <div style={
+            (education.length > 0 && (certifications.length > 0 || achievements.length > 0))
+              ? { display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '2rem' }
+              : { display: 'block' }
+          }>
             {/* Education */}
             {education.length > 0 && (
-              <div>
+              <div style={{ marginBottom: (education.length > 0 && (certifications.length > 0 || achievements.length > 0)) ? 0 : '1rem' }}>
                 <h2 style={{ fontSize: '1.25em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35em', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   Education
                 </h2>
@@ -248,51 +252,61 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
           </div>
         )}
 
-        {/* Skills & Creative Links */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '1.5rem', marginTop: '0.5rem', borderTop: '2px solid #f1f5f9', paddingTop: '0.75rem' }}>
-          {/* Skills */}
-          <div>
-            <h2 style={{ fontSize: '1.1em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', marginBottom: '0.75em', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Skills & Expertise
-            </h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35em' }}>
-              {skills.map((skill, idx) => (
-                <span key={idx} style={{
-                  background: 'rgba(27,67,96,0.05)',
-                  color: 'var(--color-primary)',
-                  border: '1px solid rgba(27,67,96,0.15)',
-                  padding: '0.25em 0.5em',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.78em',
-                  fontWeight: 600
-                }}>
-                  {skill.name} ({skill.level})
-                </span>
-              ))}
-            </div>
-          </div>
+        {/* Skills & Creative Links (Two Column or Full Width) */}
+        {(skills.length > 0 || personal.website || links.length > 0) && (
+          <div style={
+            (skills.length > 0 && (personal.website || links.length > 0))
+              ? { display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '1.5rem', marginTop: '0.5rem', borderTop: '2px solid #f1f5f9', paddingTop: '0.75rem' }
+              : { display: 'block', marginTop: '0.5rem', borderTop: '2px solid #f1f5f9', paddingTop: '0.75rem' }
+          }>
+            {/* Skills */}
+            {skills.length > 0 && (
+              <div style={{ marginBottom: (skills.length > 0 && (personal.website || links.length > 0)) ? 0 : '1rem' }}>
+                <h2 style={{ fontSize: '1.1em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', marginBottom: '0.75em', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Skills & Expertise
+                </h2>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35em' }}>
+                  {skills.map((skill, idx) => (
+                    <span key={idx} style={{
+                      background: 'rgba(27,67,96,0.05)',
+                      color: 'var(--color-primary)',
+                      border: '1px solid rgba(27,67,96,0.15)',
+                      padding: '0.25em 0.5em',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '0.78em',
+                      fontWeight: 600
+                    }}>
+                      {skill.name} ({skill.level})
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
-          {/* Links */}
-          <div>
-            <h2 style={{ fontSize: '1.1em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', marginBottom: '0.75em', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Professional Resources
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
-              {personal.website && (
-                <a href={personal.website} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.35em', fontSize: '0.82em', color: 'var(--color-secondary)', fontWeight: 600 }}>
-                  <Globe size={14} />
-                  <span>Personal Website / Portfolio</span>
-                </a>
-              )}
-              {links.map((link, idx) => (
-                <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.35em', fontSize: '0.82em', color: 'var(--color-primary)', fontWeight: 600 }}>
-                  {renderLinkIcon(link.iconType)}
-                  <span>{link.label}</span>
-                </a>
-              ))}
-            </div>
+            {/* Links */}
+            {(personal.website || links.length > 0) && (
+              <div>
+                <h2 style={{ fontSize: '1.1em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', marginBottom: '0.75em', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Professional Resources
+                </h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+                  {personal.website && (
+                    <a href={personal.website} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.35em', fontSize: '0.82em', color: 'var(--color-secondary)', fontWeight: 600 }}>
+                      <Globe size={14} />
+                      <span>Personal Website / Portfolio</span>
+                    </a>
+                  )}
+                  {links.map((link, idx) => (
+                    <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.35em', fontSize: '0.82em', color: 'var(--color-primary)', fontWeight: 600 }}>
+                      {renderLinkIcon(link.iconType)}
+                      <span>{link.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     );
   };

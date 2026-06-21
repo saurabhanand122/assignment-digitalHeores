@@ -20,7 +20,9 @@ export default function App() {
 
   // Dynamic API Base URL resolver
   const API_BASE = import.meta.env.VITE_API_URL || 
-    (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api');
+    (window.location.hostname === 'localhost' 
+      ? 'http://localhost:5000/api' 
+      : 'https://resume-builder-backend-kohl.vercel.app/api');
 
   useEffect(() => {
     const handleRouting = () => {

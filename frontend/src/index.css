@@ -422,3 +422,38 @@ button, input, textarea, select {
     box-shadow: 0 0 0 0 rgba(224, 122, 95, 0);
   }
 }
+
+/* --- SITE THEMES CONFIGURATION --- */
+
+.app-container[data-site-theme="cream"] {
+  --color-primary: #1b4360;      /* Deep Blue */
+  --color-secondary: #e07a5f;    /* Terracotta */
+  --color-bg: #f4f1de;           /* Warm Soft Cream */
+  --color-accent: #f2cc8f;       /* Mustard Yellow */
+  --color-success: #81b29a;      /* Sage Green */
+  --color-text-dark: #2d3142;
+  --color-card-bg: #ffffff;
+  --color-border: #e2e8f0;
+}
+
+.app-container[data-site-theme="dark"] {
+  --color-primary: #a5b4fc;      /* Indigo Light */
+  --color-secondary: #fda4af;    /* Rose Light */
+  --color-bg: #0f172a;           /* Dark Slate */
+  --color-accent: #f59e0b;       /* Gold */
+  --color-success: #34d399;      /* Emerald */
+  --color-text-dark: #f8fafc;    /* White slate */
+  --color-card-bg: #1e293b;      /* Slate card */
+  --color-border: #334155;       /* Slate border */
+}
+
+.app-container[data-site-theme="indigo"] {
+  --color-primary: #4f46e5;      /* Indigo */
+  --color-secondary: #06b6d4;    /* Cyan */
+  --color-bg: #e0e7ff;           /* Pale Indigo */
+  --color-accent: #fbbf24;       /* Gold */
+  --color-success: #10b981;      /* Emerald */
+  --color-text-dark: #1e1b4b;    /* Deep Indigo text */
+  --color-card-bg: #ffffff;
+  --color-border: #c7d2fe;
+}

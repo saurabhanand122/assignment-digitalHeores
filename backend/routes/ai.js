@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -13,7 +12,7 @@ async function callGemini(prompt) {
     if (!GEMINI_API_KEY) {
       throw new Error('GEMINI_API_KEY is not defined in backend configuration. Please ensure it is set as an environment variable.');
     }
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     const payload = {
       contents: [
         {
@@ -159,8 +158,10 @@ router.post('/extract-resume', upload.single('resume'), async (req, res) => {
     const fileType = req.file.mimetype;
 
     if (fileType === 'application/pdf') {
-      const data = await pdfParse(req.file.buffer);
-      extractedText = data.text;
+      const { getDocumentProxy, extractText } = await import('unpdf');
+      const pdf = await getDocumentProxy(new Uint8Array(req.file.buffer));
+      const { text } = await extractText(pdf, { mergePages: true });
+      extractedText = text;
     } else if (fileType === 'text/plain') {
       extractedText = req.file.buffer.toString('utf-8');
     } else {

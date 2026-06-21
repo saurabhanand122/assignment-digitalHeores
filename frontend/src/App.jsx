@@ -94,6 +94,59 @@ export default function App() {
     );
   }
 
+  const getClerkAppearance = () => {
+    const isDark = siteTheme === 'dark';
+    return {
+      variables: {
+        colorPrimary: isDark ? '#81b29a' : '#1b4360',
+        colorBackground: isDark ? '#0d0d21' : '#fcfbf7',
+        colorText: isDark ? '#f5f0e8' : '#1b4360',
+        colorInputBackground: isDark ? '#14142b' : '#ffffff',
+        colorInputText: isDark ? '#f5f0e8' : '#1b4360',
+        colorInputBorder: isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)',
+        borderRadius: '8px',
+        fontFamily: 'Inter, system-ui, sans-serif'
+      },
+      elements: {
+        card: {
+          background: isDark ? '#0d0d21' : '#fcfbf7',
+          border: `1px solid ${isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)'}`,
+          boxShadow: 'var(--shadow-xl)',
+          borderRadius: 'var(--radius-lg)'
+        },
+        userButtonPopoverCard: {
+          background: isDark ? '#0d0d21' : '#fcfbf7',
+          border: `1px solid ${isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)'}`,
+          boxShadow: 'var(--shadow-lg)',
+          borderRadius: 'var(--radius-md)'
+        },
+        userButtonPopoverActionButton: {
+          '&:hover': {
+            background: isDark ? 'rgba(245, 240, 232, 0.05)' : 'rgba(27, 67, 96, 0.05)'
+          }
+        },
+        socialButtonsBlockButton: {
+          border: `1px solid ${isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)'}`,
+          background: isDark ? '#14142b' : '#ffffff',
+          color: isDark ? '#f5f0e8' : '#1b4360',
+          '&:hover': {
+            background: isDark ? 'rgba(245, 240, 232, 0.05)' : 'rgba(27, 67, 96, 0.05)'
+          }
+        },
+        formButtonPrimary: {
+          background: isDark ? 'var(--color-secondary)' : 'var(--color-primary)',
+          color: '#ffffff',
+          '&:hover': {
+            background: isDark ? 'var(--color-primary)' : 'var(--color-secondary)'
+          }
+        },
+        footer: {
+          display: 'none'
+        }
+      }
+    };
+  };
+
   // Beautiful landing page for signed-out users
   const renderLoginScreen = () => {
     return (
@@ -189,7 +242,7 @@ export default function App() {
 
           {/* Action Call */}
           <div style={{ marginBottom: '3.5rem' }}>
-            <SignInButton mode="modal">
+            <SignInButton mode="modal" appearance={getClerkAppearance()}>
               <button className="btn btn-primary" style={{
                 padding: '0.95rem 2.75rem',
                 fontSize: '1.05rem',
@@ -353,7 +406,7 @@ export default function App() {
               alignItems: 'center', 
               alignSelf: 'stretch' 
             }}>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton afterSignOutUrl="/" appearance={getClerkAppearance()} />
             </div>
           )}
         </div>

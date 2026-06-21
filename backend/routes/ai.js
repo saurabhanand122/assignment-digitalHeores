@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -141,6 +145,61 @@ Return ONLY this JSON block. Do not include markdown tags (like \`\`\`json), exp
       error: 'Failed to parse suggestions: ' + err.message,
       rawResponse: responseText || null 
     });
+  }
+});
+
+// 4. POST /extract-resume - Parse uploaded PDF/TXT and extract keywords/skills
+router.post('/extract-resume', upload.single('resume'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No resume file uploaded' });
+    }
+
+    let extractedText = '';
+    const fileType = req.file.mimetype;
+
+    if (fileType === 'application/pdf') {
+      const data = await pdfParse(req.file.buffer);
+      extractedText = data.text;
+    } else if (fileType === 'text/plain') {
+      extractedText = req.file.buffer.toString('utf-8');
+    } else {
+      return res.status(400).json({ error: 'Unsupported file format. Please upload a PDF or TXT file.' });
+    }
+
+    if (!extractedText.trim()) {
+      return res.status(400).json({ error: 'Could not extract text from the file.' });
+    }
+
+    // Prompt Gemini AI to extract keywords and details
+    const prompt = `You are an expert ATS (Applicant Tracking System) optimizer and professional recruiter. Analyze the following resume text and extract the key details.
+Return the output strictly in the following JSON format:
+{
+  "fullName": "Candidate Name (if found, otherwise empty)",
+  "email": "candidate.email@example.com (if found, otherwise empty)",
+  "phone": "Phone number (if found, otherwise empty)",
+  "skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5", "Skill 6", "Skill 7", "Skill 8", "Skill 9", "Skill 10"],
+  "keywords": ["ATS Keyword 1", "ATS Keyword 2", "ATS Keyword 3", "ATS Keyword 4", "ATS Keyword 5", "ATS Keyword 6", "ATS Keyword 7", "ATS Keyword 8", "ATS Keyword 9", "ATS Keyword 10"]
+}
+Limit skills and keywords to a maximum of 10 high-value items each.
+Return ONLY this JSON block. Do not include markdown tags (like \`\`\`json), explanations, or introduction text.
+
+Resume text:
+${extractedText}`;
+
+    const responseText = await callGemini(prompt);
+
+    // Clean up markdown markers if Gemini returned them
+    let cleanText = responseText.trim();
+    if (cleanText.startsWith('```')) {
+      cleanText = cleanText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
+    }
+
+    const parsedData = JSON.parse(cleanText);
+    res.json(parsedData);
+  } catch (err) {
+    console.error('Extraction failure:', err);
+    res.status(500).json({ error: 'Failed to extract resume details: ' + err.message });
   }
 });
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ResumePreview from './ResumePreview';
-import { ArrowLeft, Save, Printer, Plus, Trash2, ChevronDown, ChevronUp, AlertCircle, Share2, Award, Briefcase, GraduationCap, Link2, Smile, Play, List, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Save, Printer, Plus, Trash2, ChevronDown, ChevronUp, AlertCircle, Share2, Award, Briefcase, GraduationCap, Link2, Smile, Play, List, Sparkles, CheckCircle, UploadCloud, FileText } from 'lucide-react';
 
 export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
   const [formData, setFormData] = useState({
@@ -117,6 +117,67 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
     } finally {
       setEnhancingField(null);
     }
+  };
+
+  // Upload/parsing states
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [extractedData, setExtractedData] = useState(null);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formDataPayload = new FormData();
+    formDataPayload.append('resume', file);
+
+    setUploadLoading(true);
+    setExtractedData(null);
+
+    try {
+      const res = await axios.post(`${API_BASE}/ai/extract-resume`, formDataPayload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setExtractedData(res.data);
+      alert('Resume parsed successfully! Review the extracted details below and click Merge into Draft.');
+    } catch (err) {
+      console.error('File upload error:', err);
+      alert('Failed to parse resume: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const handleMergeExtractedData = () => {
+    if (!extractedData) return;
+
+    const newPersonal = { ...formData.personal };
+    if (!newPersonal.fullName && extractedData.fullName) newPersonal.fullName = extractedData.fullName;
+    if (!newPersonal.email && extractedData.email) newPersonal.email = extractedData.email;
+    if (!newPersonal.phone && extractedData.phone) newPersonal.phone = extractedData.phone;
+    
+    const currentSkillsNames = new Set(formData.skills.map(s => s.name.toLowerCase().trim()));
+    const newSkills = [...formData.skills];
+    
+    if (extractedData.skills && Array.isArray(extractedData.skills)) {
+      extractedData.skills.forEach(skillName => {
+        const cleanName = skillName.trim();
+        if (cleanName && !currentSkillsNames.has(cleanName.toLowerCase())) {
+          newSkills.push({ name: cleanName, level: 4 });
+          currentSkillsNames.add(cleanName.toLowerCase());
+        }
+      });
+    }
+
+    setFormData({
+      ...formData,
+      personal: newPersonal,
+      skills: newSkills
+    });
+
+    setExtractedData(null);
+    alert('Extracted details merged into your draft successfully!');
   };
 
   const handlePersonalChange = (field, val) => {
@@ -314,6 +375,119 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
 
         {/* Form Body - Accordions */}
         <div style={{ flex: 1, paddingBottom: '3rem' }}>
+          
+          {/* Section 0: AI Resume Importer */}
+          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+            <div className="accordion-header" onClick={() => toggleSection('importer')}>
+              <span style={{ fontWeight: 700, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Sparkles size={16} style={{ color: 'var(--color-secondary)' }} />
+                <span>AI Resume Importer (PDF/TXT)</span>
+              </span>
+              {expandedSection === 'importer' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
+
+            {expandedSection === 'importer' && (
+              <div style={{ padding: '1.25rem', background: 'var(--color-card-bg)' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: '1rem', lineHeight: 1.4 }}>
+                  Have an existing resume? Upload it (PDF/TXT) to let Gemini AI extract contact info and skills, then merge them directly into your current editor draft!
+                </p>
+
+                {/* Upload Area */}
+                {!uploadLoading && !extractedData && (
+                  <label style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '2px dashed var(--color-border)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '2rem 1rem',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    background: 'rgba(27,67,96,0.01)',
+                    transition: 'all 0.2s ease',
+                    position: 'relative'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(27,67,96,0.03)';
+                    e.currentTarget.style.borderColor = 'var(--color-secondary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(27,67,96,0.01)';
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                  }}
+                  >
+                    <UploadCloud size={32} style={{ color: 'var(--color-secondary)', marginBottom: '0.75rem' }} />
+                    <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--color-primary)' }}>Upload Resume File</span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>Supports PDF, TXT (Max 5MB)</span>
+                    <input type="file" accept=".pdf,.txt" onChange={handleFileUpload} style={{ display: 'none' }} />
+                  </label>
+                )}
+
+                {/* Loading state */}
+                {uploadLoading && (
+                  <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                    <div style={{ 
+                      display: 'inline-block', 
+                      width: '30px', 
+                      height: '30px', 
+                      border: '3px solid rgba(27, 67, 96, 0.1)', 
+                      borderTopColor: 'var(--color-primary)', 
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}></div>
+                    <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--color-primary)', fontWeight: 700 }}>AI is extracting keywords...</p>
+                  </div>
+                )}
+
+                {/* Result state */}
+                {extractedData && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '1rem', background: 'rgba(27,67,96,0.02)' }}>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--color-primary)', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <CheckCircle size={14} style={{ color: 'var(--color-success)' }} />
+                      <span>Extracted Profile Data</span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.8rem' }}>
+                      {extractedData.fullName && <div><strong>Name:</strong> {extractedData.fullName}</div>}
+                      {extractedData.email && <div><strong>Email:</strong> {extractedData.email}</div>}
+                      {extractedData.phone && <div><strong>Phone:</strong> {extractedData.phone}</div>}
+                    </div>
+
+                    {extractedData.skills && extractedData.skills.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--color-primary)', marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Extracted Skills</div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+                          {extractedData.skills.map((skill, idx) => (
+                            <span key={idx} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', background: 'var(--color-card-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-full)', color: 'var(--color-primary)', fontWeight: 600 }}>
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem' }}>
+                      <button 
+                        onClick={() => setExtractedData(null)} 
+                        className="btn btn-outline" 
+                        style={{ padding: '0.5rem', fontSize: '0.75rem' }}
+                      >
+                        Discard
+                      </button>
+                      <button 
+                        onClick={handleMergeExtractedData} 
+                        className="btn btn-primary" 
+                        style={{ padding: '0.5rem', fontSize: '0.75rem', fontWeight: 700 }}
+                      >
+                        Merge into Draft
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           
           {/* Section 1: Resume Metadata */}
           <div style={{ borderBottom: '1px solid var(--color-border)' }}>

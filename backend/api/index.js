@@ -69,7 +69,9 @@ app.use(async (req, res, next) => {
 
 // Routes
 const resumeRoutes = require('../routes/resumes');
+const aiRoutes = require('../routes/ai');
 app.use('/api/resumes', resumeRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Root route
 app.get('/', (req, res) => {

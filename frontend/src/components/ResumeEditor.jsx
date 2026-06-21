@@ -94,47 +94,29 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
     return { score, details };
   };
 
-  const handleEnhanceText = (currentText, onUpdate) => {
+  const [enhancingField, setEnhancingField] = useState(null);
+
+  const handleEnhanceText = async (fieldKey, currentText, type, onUpdate) => {
     if (!currentText || currentText.trim() === '') {
       alert('Please enter some text first before trying to enhance it.');
       return;
     }
     
-    const sentences = currentText.split('.').map(s => s.trim()).filter(Boolean);
-    const enhancedSentences = sentences.map(s => {
-      let sentence = s.toLowerCase();
-      if (sentence.includes('managed a team') || sentence.includes('led a team')) {
-        return 'Spearheaded and directed a high-performing cross-functional team, driving alignment on key technical milestones';
+    try {
+      setEnhancingField(fieldKey);
+      const res = await axios.post(`${API_BASE}/ai/enhance`, {
+        text: currentText,
+        type: type
+      });
+      if (res.data?.enhancedText) {
+        onUpdate(res.data.enhancedText);
       }
-      if (sentence.includes('responsible for') || sentence.includes('worked on')) {
-        return 'Owned the design and implementation of critical core modules, optimizing system efficiency and reliability';
-      }
-      if (sentence.includes('helped to') || sentence.includes('assisted in')) {
-        return 'Collaborated closely with engineering and product leaders to execute and ship critical high-value features';
-      }
-      if (sentence.includes('made') || sentence.includes('built') || sentence.includes('created')) {
-        return 'Architected and engineered scalable, modular components, achieving outstanding performance gains';
-      }
-      if (sentence.includes('fixed bugs') || sentence.includes('improved performance')) {
-        return 'Identified bottlenecks and implemented optimizations, boosting application performance by 25% and reducing error rates';
-      }
-      
-      const actionVerbs = [
-        'Accelerated development of',
-        'Conceptualized and delivered',
-        'Engineered high-quality solutions for',
-        'Pioneered the integration of',
-        'Optimized core infrastructure for',
-        'Streamlined internal workflows to improve'
-      ];
-      const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
-      
-      let firstChar = s.charAt(0).toUpperCase();
-      let rest = s.slice(1);
-      return `${randomVerb} ${firstChar.toLowerCase()}${rest}`;
-    });
-
-    onUpdate(enhancedSentences.join('. ') + '.');
+    } catch (err) {
+      console.error('Enhancement error:', err);
+      alert('AI Enhancement failed: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setEnhancingField(null);
+    }
   };
 
   const handlePersonalChange = (field, val) => {
@@ -497,10 +479,12 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                     <label className="form-label" style={{ margin: 0 }}>Professional Summary</label>
                     <button 
                       type="button"
-                      onClick={() => handleEnhanceText(formData.personal.summary, (enhanced) => handlePersonalChange('summary', enhanced))}
-                      style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
+                      disabled={enhancingField === 'summary'}
+                      onClick={() => handleEnhanceText('summary', formData.personal.summary, 'summary', (enhanced) => handlePersonalChange('summary', enhanced))}
+                      style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: enhancingField === 'summary' ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
                     >
-                      <Sparkles size={11} /> Auto-Enhance
+                      <Sparkles size={11} style={{ animation: enhancingField === 'summary' ? 'spin 1s linear infinite' : 'none' }} />
+                      {enhancingField === 'summary' ? 'Enhancing...' : 'Auto-Enhance'}
                     </button>
                   </div>
                   <textarea 
@@ -585,10 +569,12 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                         <label className="form-label" style={{ margin: 0 }}>Job Description</label>
                         <button 
                           type="button"
-                          onClick={() => handleEnhanceText(exp.description, (enhanced) => updateArrayItem('experience', idx, 'description', enhanced))}
-                          style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
+                          disabled={enhancingField === `experience-${idx}`}
+                          onClick={() => handleEnhanceText(`experience-${idx}`, exp.description, 'experience', (enhanced) => updateArrayItem('experience', idx, 'description', enhanced))}
+                          style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: enhancingField === `experience-${idx}` ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
                         >
-                          <Sparkles size={11} /> Auto-Enhance
+                          <Sparkles size={11} style={{ animation: enhancingField === `experience-${idx}` ? 'spin 1s linear infinite' : 'none' }} />
+                          {enhancingField === `experience-${idx}` ? 'Enhancing...' : 'Auto-Enhance'}
                         </button>
                       </div>
                       <textarea 
@@ -691,10 +677,12 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                         <label className="form-label" style={{ margin: 0 }}>Description</label>
                         <button 
                           type="button"
-                          onClick={() => handleEnhanceText(proj.description, (enhanced) => updateArrayItem('projects', idx, 'description', enhanced))}
-                          style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
+                          disabled={enhancingField === `project-${idx}`}
+                          onClick={() => handleEnhanceText(`project-${idx}`, proj.description, 'project', (enhanced) => updateArrayItem('projects', idx, 'description', enhanced))}
+                          style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: enhancingField === `project-${idx}` ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
                         >
-                          <Sparkles size={11} /> Auto-Enhance
+                          <Sparkles size={11} style={{ animation: enhancingField === `project-${idx}` ? 'spin 1s linear infinite' : 'none' }} />
+                          {enhancingField === `project-${idx}` ? 'Enhancing...' : 'Auto-Enhance'}
                         </button>
                       </div>
                       <textarea className="form-input" rows={2} value={proj.description} onChange={(e) => updateArrayItem('projects', idx, 'description', e.target.value)} />

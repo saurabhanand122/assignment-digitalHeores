@@ -3,6 +3,7 @@ import Dashboard from './components/Dashboard';
 import ResumeEditor from './components/ResumeEditor';
 import ShareView from './components/ShareView';
 import Footer from './components/Footer';
+import AIChatbot from './components/AIChatbot';
 import { Sparkles, Palette, ArrowRight, CheckCircle } from 'lucide-react';
 import { useUser, SignInButton, UserButton } from '@clerk/clerk-react';
 
@@ -394,6 +395,9 @@ export default function App() {
           </>
         )}
       </div>
+
+      {/* AI Career Assistant Chatbot */}
+      {isSignedIn && <AIChatbot API_BASE={API_BASE} />}
 
       {/* Global Footer */}
       <Footer />

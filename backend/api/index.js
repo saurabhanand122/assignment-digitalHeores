@@ -15,6 +15,58 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Database connection cache
+let cachedConnection = null;
+let cachedPromise = null;
+
+async function connectToDatabase() {
+  if (cachedConnection) {
+    return cachedConnection;
+  }
+
+  if (mongoose.connection.readyState === 1) {
+    cachedConnection = mongoose.connection;
+    return cachedConnection;
+  }
+
+  if (!cachedPromise) {
+    // Disable Mongoose query buffering so database queries fail immediately if connection is not ready
+    mongoose.set('bufferCommands', false);
+    
+    cachedPromise = mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 8000 // Quick timeout to handle whitelisting issues gracefully
+    }).then((mongooseInstance) => {
+      console.log('Connected to MongoDB database successfully');
+      return mongooseInstance.connection;
+    }).catch((err) => {
+      cachedPromise = null;
+      console.error('MongoDB database connection error:', err);
+      throw err;
+    });
+  }
+
+  cachedConnection = await cachedPromise;
+  return cachedConnection;
+}
+
+// Database Connection Middleware
+app.use(async (req, res, next) => {
+  // Skip DB connection checks for root API details page
+  if (req.path === '/') {
+    return next();
+  }
+  
+  try {
+    await connectToDatabase();
+    next();
+  } catch (err) {
+    res.status(500).json({ 
+      error: 'Database connection failed: ' + err.message,
+      detail: 'Please ensure that your MongoDB Atlas cluster has "Allow Access from Anywhere" (IP address 0.0.0.0/0) enabled in the Network Access tab, and verify that the database credentials/connection string are correct.'
+    });
+  }
+});
+
 // Routes
 const resumeRoutes = require('../routes/resumes');
 app.use('/api/resumes', resumeRoutes);
@@ -27,15 +79,6 @@ app.get('/', (req, res) => {
     email: 'saurabh.anand122@gmail.com'
   });
 });
-
-// Database connection
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB database successfully');
-  })
-  .catch((err) => {
-    console.error('MongoDB database connection error:', err);
-  });
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {

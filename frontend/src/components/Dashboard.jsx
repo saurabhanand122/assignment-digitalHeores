@@ -21,7 +21,12 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
       setError(null);
     } catch (err) {
       console.error('Error fetching resumes:', err);
-      setError('Could not connect to backend server. Make sure MongoDB & the backend port are active.');
+      const serverError = err.response?.data?.error;
+      const serverDetail = err.response?.data?.detail;
+      setError({
+        message: serverError || 'Could not connect to backend server.',
+        detail: serverDetail || 'Make sure MongoDB & the backend port are active and running.'
+      });
     } finally {
       setLoading(false);
     }
@@ -340,7 +345,12 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
           margin: '2rem 0',
           boxShadow: 'var(--shadow-sm)'
         }}>
-          <p style={{ fontWeight: 700, marginBottom: '0.75rem', fontSize: '1.1rem' }}>{error}</p>
+          <p style={{ fontWeight: 700, marginBottom: '0.75rem', fontSize: '1.1rem' }}>{error.message || error}</p>
+          {error.detail && (
+            <p style={{ fontSize: '0.9rem', marginBottom: '1.25rem', color: 'var(--color-text-dark)', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.5 }}>
+              {error.detail}
+            </p>
+          )}
           <button onClick={fetchResumes} className="btn btn-outline" style={{ border: '1px solid #c53030', color: '#c53030', padding: '0.5rem 1.5rem', borderRadius: 'var(--radius-sm)' }}>
             Reconnect Server
           </button>

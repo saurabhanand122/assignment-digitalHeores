@@ -20,7 +20,12 @@ export default function ShareView({ id, onBackToDashboard, API_BASE }) {
       setError(null);
     } catch (err) {
       console.error('Error fetching shared resume:', err);
-      setError('Could not load portfolio. It may have been deleted.');
+      const serverError = err.response?.data?.error;
+      const serverDetail = err.response?.data?.detail;
+      setError({
+        message: serverError || 'Could not load portfolio.',
+        detail: serverDetail || 'It may have been deleted or the database connection failed.'
+      });
     } finally {
       setLoading(false);
     }
@@ -45,8 +50,13 @@ export default function ShareView({ id, onBackToDashboard, API_BASE }) {
 
   if (error) {
     return (
-      <div style={{ textAlign: 'center', padding: '6rem 2rem', background: '#fff', borderRadius: 'var(--radius-md)', margin: '4rem auto', maxWidth: '500px', border: '1px solid var(--color-border)' }}>
-        <p style={{ color: '#ef4444', fontWeight: 700, fontSize: '1.2rem', marginBottom: '1rem' }}>{error}</p>
+      <div style={{ textAlign: 'center', padding: '6rem 2rem', background: 'var(--color-card-bg)', borderRadius: 'var(--radius-md)', margin: '4rem auto', maxWidth: '500px', border: '1px solid var(--color-border)' }}>
+        <p style={{ color: '#ef4444', fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.75rem' }}>{error.message || error}</p>
+        {error.detail && (
+          <p style={{ fontSize: '0.9rem', marginBottom: '1.5rem', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+            {error.detail}
+          </p>
+        )}
         {onBackToDashboard && (
           <button onClick={onBackToDashboard} className="btn btn-primary">
             Go to Dashboard

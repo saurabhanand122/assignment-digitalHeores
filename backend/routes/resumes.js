@@ -5,7 +5,8 @@ const Resume = require('../models/Resume');
 // GET all resumes
 router.get('/', async (req, res) => {
   try {
-    const resumes = await Resume.find().sort({ updatedAt: -1 });
+    const filter = req.query.userId ? { userId: req.query.userId } : {};
+    const resumes = await Resume.find(filter).sort({ updatedAt: -1 });
     res.json(resumes);
   } catch (err) {
     res.status(500).json({ error: 'Server error retrieving resumes: ' + err.message });

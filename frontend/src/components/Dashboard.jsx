@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Edit2, Share2, Trash2, Mail, MapPin, Eye, Search, Database, Layers, Sparkles, FolderOpen, ArrowRight } from 'lucide-react';
+import { Plus, Edit2, Share2, Trash2, Mail, MapPin, Eye, Search, Database, Layers, Sparkles, FolderOpen, ArrowRight, Copy } from 'lucide-react';
 
-export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
+export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE, userId }) {
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,12 +11,13 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
 
   useEffect(() => {
     fetchResumes();
-  }, []);
+  }, [userId]);
 
   const fetchResumes = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_BASE}/resumes`);
+      const url = userId ? `${API_BASE}/resumes?userId=${userId}` : `${API_BASE}/resumes`;
+      const res = await axios.get(url);
       setResumes(res.data);
       setError(null);
     } catch (err) {
@@ -29,6 +30,29 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDuplicate = async (resume, e) => {
+    e.stopPropagation();
+    try {
+      const duplicatedData = {
+        ...resume,
+        title: `${resume.title} (Copy)`,
+        userId: userId
+      };
+      // Strip DB-generated identifiers
+      delete duplicatedData._id;
+      delete duplicatedData.createdAt;
+      delete duplicatedData.updatedAt;
+      delete duplicatedData.__v;
+
+      const res = await axios.post(`${API_BASE}/resumes`, duplicatedData);
+      setResumes([res.data, ...resumes]);
+      alert('Resume duplicated successfully!');
+    } catch (err) {
+      console.error('Error duplicating resume:', err);
+      alert('Failed to duplicate resume');
     }
   };
 
@@ -466,6 +490,23 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
                     title={copiedId === resume._id ? 'Copied!' : 'Copy Share Link'}
                   >
                     <Share2 size={15} />
+                  </button>
+                  <button 
+                    onClick={(e) => handleDuplicate(resume, e)} 
+                    style={{ 
+                      background: 'rgba(27, 67, 96, 0.08)', 
+                      color: 'var(--color-primary)', 
+                      border: 'none', 
+                      padding: '0.5rem', 
+                      borderRadius: 'var(--radius-sm)', 
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      transition: 'all 0.2s ease'
+                    }}
+                    title="Duplicate Resume"
+                  >
+                    <Copy size={15} />
                   </button>
                   <button 
                     onClick={(e) => handleDelete(resume._id, e)} 

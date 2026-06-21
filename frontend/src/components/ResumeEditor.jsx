@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ResumePreview from './ResumePreview';
-import { ArrowLeft, Save, Printer, Plus, Trash2, ChevronDown, ChevronUp, AlertCircle, Share2, Award, Briefcase, GraduationCap, Link2, Smile, Play, List } from 'lucide-react';
+import { ArrowLeft, Save, Printer, Plus, Trash2, ChevronDown, ChevronUp, AlertCircle, Share2, Award, Briefcase, GraduationCap, Link2, Smile, Play, List, Sparkles, CheckCircle } from 'lucide-react';
 
-export default function ResumeEditor({ id, onBack, API_BASE }) {
+export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
   const [formData, setFormData] = useState({
     title: 'My Professional Resume',
     template: 'slide',
@@ -60,6 +60,83 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
     }
   };
 
+  const calculateCompletenessScore = () => {
+    let score = 0;
+    let details = [];
+
+    // Personal info (max 30 points)
+    let personalScore = 0;
+    if (formData.personal?.fullName) personalScore += 10;
+    if (formData.personal?.email) personalScore += 5;
+    if (formData.personal?.phone) personalScore += 5;
+    if (formData.personal?.summary) personalScore += 10;
+    score += personalScore;
+    if (personalScore < 30) details.push('Complete personal info details & professional summary.');
+
+    // Work Experience (max 30 points)
+    let expCount = formData.experience?.filter(e => e.role && e.company).length || 0;
+    let expScore = Math.min(expCount * 15, 30);
+    score += expScore;
+    if (expScore < 30) details.push('Add at least 2 complete work experience entries.');
+
+    // Education (max 20 points)
+    let eduCount = formData.education?.filter(e => e.school && e.degree).length || 0;
+    let eduScore = Math.min(eduCount * 10, 20);
+    score += eduScore;
+    if (eduScore < 20) details.push('Add at least 2 complete educational records.');
+
+    // Skills (max 20 points)
+    let skillCount = formData.skills?.filter(s => s.name).length || 0;
+    let skillScore = Math.min(skillCount * 4, 20);
+    score += skillScore;
+    if (skillScore < 20) details.push('Add at least 5 key technical/soft skills.');
+
+    return { score, details };
+  };
+
+  const handleEnhanceText = (currentText, onUpdate) => {
+    if (!currentText || currentText.trim() === '') {
+      alert('Please enter some text first before trying to enhance it.');
+      return;
+    }
+    
+    const sentences = currentText.split('.').map(s => s.trim()).filter(Boolean);
+    const enhancedSentences = sentences.map(s => {
+      let sentence = s.toLowerCase();
+      if (sentence.includes('managed a team') || sentence.includes('led a team')) {
+        return 'Spearheaded and directed a high-performing cross-functional team, driving alignment on key technical milestones';
+      }
+      if (sentence.includes('responsible for') || sentence.includes('worked on')) {
+        return 'Owned the design and implementation of critical core modules, optimizing system efficiency and reliability';
+      }
+      if (sentence.includes('helped to') || sentence.includes('assisted in')) {
+        return 'Collaborated closely with engineering and product leaders to execute and ship critical high-value features';
+      }
+      if (sentence.includes('made') || sentence.includes('built') || sentence.includes('created')) {
+        return 'Architected and engineered scalable, modular components, achieving outstanding performance gains';
+      }
+      if (sentence.includes('fixed bugs') || sentence.includes('improved performance')) {
+        return 'Identified bottlenecks and implemented optimizations, boosting application performance by 25% and reducing error rates';
+      }
+      
+      const actionVerbs = [
+        'Accelerated development of',
+        'Conceptualized and delivered',
+        'Engineered high-quality solutions for',
+        'Pioneered the integration of',
+        'Optimized core infrastructure for',
+        'Streamlined internal workflows to improve'
+      ];
+      const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
+      
+      let firstChar = s.charAt(0).toUpperCase();
+      let rest = s.slice(1);
+      return `${randomVerb} ${firstChar.toLowerCase()}${rest}`;
+    });
+
+    onUpdate(enhancedSentences.join('. ') + '.');
+  };
+
   const handlePersonalChange = (field, val) => {
     setFormData({
       ...formData,
@@ -97,14 +174,21 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
     try {
       setSaving(true);
       setSaveStatus(null);
+      
+      const payload = {
+        ...formData,
+        userId: userId
+      };
+
       if (id) {
         // Update existing
-        await axios.put(`${API_BASE}/resumes/${id}`, formData);
+        await axios.put(`${API_BASE}/resumes/${id}`, payload);
       } else {
         // Create new
-        const res = await axios.post(`${API_BASE}/resumes`, formData);
+        const res = await axios.post(`${API_BASE}/resumes`, payload);
         // Switch to the newly created resume ID so we can keep updating it
         formData._id = res.data._id;
+        window.location.hash = `#/editor/${res.data._id}`;
       }
       setSaveStatus({ type: 'success', message: 'Saved successfully!' });
       setTimeout(() => setSaveStatus(null), 3000);
@@ -189,6 +273,62 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
             <span>{saveStatus.message}</span>
           </div>
         )}
+
+        {/* Resume Score Checker widget */}
+        {(() => {
+          const { score, details } = calculateCompletenessScore();
+          return (
+            <div style={{
+              padding: '1.25rem',
+              borderBottom: '1px solid var(--color-border)',
+              background: 'rgba(27, 67, 96, 0.02)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-primary)' }}>
+                  Resume Completeness Score
+                </span>
+                <span style={{ 
+                  fontSize: '1rem', 
+                  fontWeight: 800, 
+                  color: score >= 80 ? 'var(--color-success)' : score >= 50 ? 'var(--color-secondary)' : '#b91c1c',
+                  background: score >= 80 ? 'rgba(129, 178, 154, 0.12)' : score >= 50 ? 'rgba(224, 122, 95, 0.1)' : 'rgba(239, 68, 68, 0.08)',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: 'var(--radius-full)',
+                  border: score >= 80 ? '1px solid rgba(129, 178, 154, 0.25)' : score >= 50 ? '1px solid rgba(224, 122, 95, 0.2)' : '1px solid rgba(239, 68, 68, 0.15)'
+                }}>
+                  {score}%
+                </span>
+              </div>
+              
+              {/* Progress Bar */}
+              <div style={{ width: '100%', height: '8px', background: 'rgba(27, 67, 96, 0.08)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
+                <div style={{ 
+                  width: `${score}%`, 
+                  height: '100%', 
+                  background: score >= 80 ? 'var(--color-success)' : score >= 50 ? 'var(--color-secondary)' : '#ef4444', 
+                  borderRadius: 'var(--radius-full)',
+                  transition: 'width 0.5s ease-in-out' 
+                }} />
+              </div>
+
+              {/* Quick Tip / Next Steps */}
+              {details.length > 0 ? (
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <Sparkles size={12} style={{ color: 'var(--color-secondary)', flexShrink: 0 }} />
+                  <span>Next: {details[0]}</span>
+                </p>
+              ) : (
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-success)', margin: 0, fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <CheckCircle size={12} style={{ color: 'var(--color-success)', flexShrink: 0 }} />
+                  <span>Perfect! Your resume is ready to share.</span>
+                </p>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Form Body - Accordions */}
         <div style={{ flex: 1, paddingBottom: '3rem' }}>
@@ -353,7 +493,16 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Professional Summary</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                    <label className="form-label" style={{ margin: 0 }}>Professional Summary</label>
+                    <button 
+                      type="button"
+                      onClick={() => handleEnhanceText(formData.personal.summary, (enhanced) => handlePersonalChange('summary', enhanced))}
+                      style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
+                    >
+                      <Sparkles size={11} /> Auto-Enhance
+                    </button>
+                  </div>
                   <textarea 
                     className="form-input" 
                     rows={4} 
@@ -432,7 +581,16 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
                       </div>
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Job Description</label>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <label className="form-label" style={{ margin: 0 }}>Job Description</label>
+                        <button 
+                          type="button"
+                          onClick={() => handleEnhanceText(exp.description, (enhanced) => updateArrayItem('experience', idx, 'description', enhanced))}
+                          style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
+                        >
+                          <Sparkles size={11} /> Auto-Enhance
+                        </button>
+                      </div>
                       <textarea 
                         className="form-input" 
                         rows={3} 
@@ -529,7 +687,16 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
                       <input type="text" className="form-input" value={proj.technologies} onChange={(e) => updateArrayItem('projects', idx, 'technologies', e.target.value)} placeholder="e.g. React, Node.js, MongoDB" />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Description</label>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <label className="form-label" style={{ margin: 0 }}>Description</label>
+                        <button 
+                          type="button"
+                          onClick={() => handleEnhanceText(proj.description, (enhanced) => updateArrayItem('projects', idx, 'description', enhanced))}
+                          style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}
+                        >
+                          <Sparkles size={11} /> Auto-Enhance
+                        </button>
+                      </div>
                       <textarea className="form-input" rows={2} value={proj.description} onChange={(e) => updateArrayItem('projects', idx, 'description', e.target.value)} />
                     </div>
                     <div className="form-group">

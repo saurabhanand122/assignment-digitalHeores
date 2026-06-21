@@ -1,6 +1,21 @@
 import { useEffect } from 'react';
 import { Mail, Phone, MapPin, Globe, Award, Briefcase, GraduationCap, Code, ExternalLink, Smile, Play, List } from 'lucide-react';
 
+const GithubIcon = ({ size = 13, style = {} }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github" style={style}>
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+    <path d="M9 18c-4.51 2-5-2-7-2"/>
+  </svg>
+);
+
+const LinkedinIcon = ({ size = 13, style = {} }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-linkedin" style={style}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect width="4" height="12" x="2" y="9"/>
+    <circle cx="4" cy="4" r="2"/>
+  </svg>
+);
+
 export default function ResumePreview({ data, activeSlide = 0, isInteractive = false, activeHighlightField = null }) {
   if (!data) return <div style={{ padding: '2rem', textAlign: 'center' }}>No resume data loaded.</div>;
 
@@ -15,6 +30,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
     skills = [],
     projects = [],
     certifications = [],
+    achievements = [],
     links = []
   } = data;
 
@@ -169,7 +185,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
         )}
 
         {/* Education & Certifications (Two Column) */}
-        {(education.length > 0 || certifications.length > 0) && (
+        {(education.length > 0 || certifications.length > 0 || achievements.length > 0) && (
           <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '2rem' }}>
             {/* Education */}
             {education.length > 0 && (
@@ -189,23 +205,44 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
               </div>
             )}
 
-            {/* Certifications */}
-            {certifications.length > 0 && (
+            {/* Certifications & Achievements */}
+            {(certifications.length > 0 || achievements.length > 0) && (
               <div>
-                <h2 style={{ fontSize: '1.25em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35em', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  Certifications
-                </h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75em' }}>
-                  {certifications.map((cert, idx) => (
-                    <div key={idx} style={{ display: 'flex', gap: '0.4em', alignItems: 'flex-start' }}>
-                      <Award size={14} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: '2px' }} />
-                      <div>
-                        <h4 style={{ fontSize: '0.85em', color: '#1a202c', fontWeight: 700, margin: 0 }}>{cert.title}</h4>
-                        <p style={{ fontSize: '0.75em', color: '#718096', margin: 0 }}>{cert.issuer} {cert.date && `(${cert.date})`}</p>
-                      </div>
+                {certifications.length > 0 && (
+                  <div style={{ marginBottom: '1.5rem' }}>
+                    <h2 style={{ fontSize: '1.25em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35em', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      Certifications
+                    </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75em' }}>
+                      {certifications.map((cert, idx) => (
+                        <div key={idx} style={{ display: 'flex', gap: '0.4em', alignItems: 'flex-start' }}>
+                          <Award size={14} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: '2px' }} />
+                          <div>
+                            <h4 style={{ fontSize: '0.85em', color: '#1a202c', fontWeight: 700, margin: 0 }}>{cert.title}</h4>
+                            <p style={{ fontSize: '0.75em', color: '#718096', margin: 0 }}>{cert.issuer} {cert.date && `(${cert.date})`}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
+                {achievements.length > 0 && (
+                  <div>
+                    <h2 style={{ fontSize: '1.25em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35em', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      Achievements
+                    </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75em' }}>
+                      {achievements.map((ach, idx) => (
+                        <div key={idx} style={{ display: 'flex', gap: '0.4em', alignItems: 'flex-start' }}>
+                          <Award size={14} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: '2px' }} />
+                          <div>
+                            <p style={{ fontSize: '0.85em', color: '#1a202c', margin: 0 }}>{ach.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -357,6 +394,57 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
               ))}
             </div>
           </div>
+
+          {/* Projects */}
+          {projects.length > 0 && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ fontSize: '1.25em', color: 'var(--color-primary)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5em', marginBottom: '1em' }}>Projects</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: `${spacingScale * 0.8}rem` }}>
+                {projects.map((proj, idx) => (
+                  <div key={idx}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <h4 style={{ fontSize: '1.05em', fontWeight: 700 }}>
+                        {proj.title} {proj.technologies && <span style={{ fontWeight: 400, fontStyle: 'italic', fontSize: '0.9em', color: 'var(--color-text-muted)' }}>| {proj.technologies}</span>}
+                      </h4>
+                      {proj.link && (
+                        <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85em', textDecoration: 'underline' }}>Link</a>
+                      )}
+                    </div>
+                    {proj.role && <p style={{ fontSize: '0.85em', fontStyle: 'italic', margin: '0.1rem 0' }}>Role: {proj.role}</p>}
+                    <p style={{ fontSize: '0.9em', whiteSpace: 'pre-line', marginTop: '0.2rem' }}>{proj.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Certifications */}
+          {certifications.length > 0 && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ fontSize: '1.25em', color: 'var(--color-primary)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5em', marginBottom: '1em' }}>Certifications</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                {certifications.map((cert, idx) => (
+                  <div key={idx} style={{ fontSize: '0.9em' }}>
+                    <span style={{ fontWeight: 700 }}>{cert.title}</span> {cert.issuer && `– ${cert.issuer}`} {cert.date && `(${cert.date})`}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Achievements */}
+          {achievements.length > 0 && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ fontSize: '1.25em', color: 'var(--color-primary)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5em', marginBottom: '1em' }}>Achievements</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                {achievements.map((ach, idx) => (
+                  <div key={idx} style={{ fontSize: '0.9em' }}>
+                    • {ach.text}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -364,79 +452,278 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
 
   // --- 3. MINIMALIST SERIF TEMPLATE ---
   const renderMinimalistSerifTemplate = () => {
+    // Helper to format descriptions into standard bullet points if they contain newlines
+    const renderBullets = (text) => {
+      if (!text) return null;
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      if (lines.length <= 1) {
+        return <p style={{ fontSize: '0.95em', lineHeight: '1.45', color: '#1a1a1a', margin: 0 }}>{text}</p>;
+      }
+      return (
+        <ul style={{ margin: '0.2rem 0 0 1.25rem', padding: 0, listStyleType: 'disc', fontSize: '0.95em', lineHeight: '1.45', color: '#1a1a1a' }}>
+          {lines.map((line, idx) => (
+            <li key={idx} style={{ marginBottom: '0.15rem' }}>
+              {line.startsWith('-') || line.startsWith('•') ? line.substring(1).trim() : line}
+            </li>
+          ))}
+        </ul>
+      );
+    };
+
+    const renderSkills = () => {
+      if (skills.length === 0) return null;
+      
+      const categorized = skills.filter(s => s.name && s.name.includes(':'));
+      if (categorized.length > 0) {
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.95em', lineHeight: '1.45', color: '#1a1a1a' }}>
+            {skills.map((s, idx) => {
+              const parts = s.name.split(':');
+              const category = parts[0].trim();
+              const list = parts.slice(1).join(':').trim();
+              return (
+                <div key={idx}>
+                  <span style={{ fontWeight: 700 }}>{category}: </span>
+                  <span>{list}</span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      }
+      
+      return (
+        <div style={{ fontSize: '0.95em', lineHeight: '1.45', color: '#1a1a1a' }}>
+          <span style={{ fontWeight: 700 }}>Skills: </span>
+          <span>{skills.map(s => s.name).join(', ')}</span>
+        </div>
+      );
+    };
+
     return (
       <div className="resume-a4-page" style={{
         background: '#ffffff',
         color: '#1a1a1a',
-        borderRadius: 'var(--radius-md)',
+        fontFamily: 'var(--font-serif), "Times New Roman", Times, Georgia, serif',
+        fontSize: `${fontSizeScale}px`,
+        padding: `${spacingScale * 1.2}rem ${spacingScale * 1.5}rem`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: `${spacingScale * 0.65}rem`,
+        minHeight: '1123px',
         boxShadow: 'var(--shadow-lg)',
         border: '1px solid var(--color-border)',
-        minHeight: '1123px',
-        fontFamily: 'var(--font-serif)',
-        fontSize: `${fontSizeScale}px`,
-        padding: `${spacingScale * 1.25}rem ${spacingScale * 1.5}rem`,
         transition: 'all var(--transition-normal)'
       }}>
-        {/* Header */}
-        <div 
-          className={activeHighlightField === 'personal' ? 'highlight-pulse' : ''} 
-          style={{ textAlign: 'center', marginBottom: '2.5rem', borderBottom: '2px double #ccc', paddingBottom: '1.5rem', padding: '0.25rem', transition: 'all var(--transition-fast)' }}
-        >
-          <h1 style={{ fontSize: '2.5em', fontWeight: 400, marginBottom: '0.5em' }}>{personal.fullName || 'Name'}</h1>
-          <p style={{ fontSize: '1.1em', fontStyle: 'italic', color: '#555', marginBottom: '1rem' }}>{personal.title}</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', fontSize: '0.85em', fontFamily: 'var(--font-sans)', color: '#666' }}>
-            {personal.email && <span>{personal.email}</span>}
-            {personal.phone && <span>• {personal.phone}</span>}
-            {personal.location && <span>• {personal.location}</span>}
-            {personal.website && <span>• {personal.website}</span>}
+        {/* Centered Header */}
+        <div style={{ textAlign: 'center', marginBottom: '0.25rem' }}>
+          <h1 style={{ fontSize: '2.4em', fontWeight: 700, margin: '0 0 0.35rem 0', fontFamily: 'var(--font-serif)', color: '#1a1a1a', letterSpacing: '-0.5px' }}>
+            {personal.fullName || 'Candidate Name'}
+          </h1>
+          
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            gap: '1.25rem', 
+            flexWrap: 'wrap', 
+            fontSize: '0.95em', 
+            color: '#1a1a1a',
+            fontFamily: 'var(--font-serif), "Times New Roman", Times, Georgia, serif',
+            alignItems: 'center'
+          }}>
+            {personal.email && (
+              <a href={`mailto:${personal.email}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                {personal.email}
+              </a>
+            )}
+            {personal.phone && <span>{personal.phone}</span>}
+            {personal.location && <span>{personal.location}</span>}
+            {personal.linkedin && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <LinkedinIcon size={13} style={{ strokeWidth: 2 }} />
+                <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  LinkedIn
+                </a>
+              </span>
+            )}
+            {personal.github && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <GithubIcon size={13} style={{ strokeWidth: 2 }} />
+                <a href={personal.github} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  GitHub
+                </a>
+              </span>
+            )}
+            {personal.geeksforgeeks && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <Code size={13} style={{ strokeWidth: 2 }} />
+                <a href={personal.geeksforgeeks} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  GeeksforGeeks
+                </a>
+              </span>
+            )}
+            {personal.website && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <Globe size={13} style={{ strokeWidth: 2 }} />
+                <a href={personal.website} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  Portfolio
+                </a>
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Summary */}
+        {/* Professional Summary */}
         {personal.summary && (
-          <div className={activeHighlightField === 'personal' ? 'highlight-pulse' : ''} style={{ marginBottom: '2rem', padding: '0.25rem', transition: 'all var(--transition-fast)' }}>
-            <p style={{ fontSize: '1em', fontStyle: 'italic', lineHeight: '1.6', textAlign: 'justify' }}>{personal.summary}</p>
+          <div>
+            <h3 style={{ fontSize: '1.2em', fontWeight: 700, margin: '0 0 0.15rem 0', fontFamily: 'var(--font-serif)' }}>
+              Professional Summary
+            </h3>
+            <hr style={{ border: 'none', borderTop: '1px solid #1a1a1a', margin: '0 0 0.35rem 0' }} />
+            <p style={{ fontSize: '0.95em', lineHeight: '1.45', color: '#1a1a1a', textAlign: 'justify', margin: 0 }}>
+              {personal.summary}
+            </p>
+          </div>
+        )}
+
+        {/* Education */}
+        {education.length > 0 && (
+          <div>
+            <h3 style={{ fontSize: '1.2em', fontWeight: 700, margin: '0 0 0.15rem 0', fontFamily: 'var(--font-serif)' }}>
+              Education
+            </h3>
+            <hr style={{ border: 'none', borderTop: '1px solid #1a1a1a', margin: '0 0 0.35rem 0' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {education.map((edu, idx) => (
+                <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '0.95em' }}>
+                    <span>{edu.school}</span>
+                    <span style={{ fontWeight: 400 }}>{edu.gradDate || edu.duration}</span>
+                  </div>
+                  <div style={{ fontStyle: 'italic', fontSize: '0.9em', marginTop: '0.05rem' }}>
+                    {edu.degree}{edu.score && ` — ${edu.score.includes('CGPA') || edu.score.includes('%') || edu.score.includes('Grade') ? edu.score : `CGPA: ${edu.score}`}`}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Skills */}
+        {skills.length > 0 && (
+          <div>
+            <h3 style={{ fontSize: '1.2em', fontWeight: 700, margin: '0 0 0.15rem 0', fontFamily: 'var(--font-serif)' }}>
+              Technical Skills
+            </h3>
+            <hr style={{ border: 'none', borderTop: '1px solid #1a1a1a', margin: '0 0 0.35rem 0' }} />
+            {renderSkills()}
           </div>
         )}
 
         {/* Experience */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.3em', borderBottom: '1px solid #aaa', paddingBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Professional Experience</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: `${spacingScale * 0.9}rem` }}>
-            {experience.map((exp, idx) => (
-              <div 
-                key={idx} 
-                className={activeHighlightField === `experience-${idx}` ? 'highlight-pulse' : ''} 
-                style={{ padding: '0.25rem', transition: 'all var(--transition-fast)' }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-                  <span>{exp.role}</span>
-                  <span style={{ fontWeight: 400, fontSize: '0.9em' }}>{exp.startDate} – {exp.endDate || 'Present'}</span>
+        {experience.length > 0 && (
+          <div>
+            <h3 style={{ fontSize: '1.2em', fontWeight: 700, margin: '0 0 0.15rem 0', fontFamily: 'var(--font-serif)' }}>
+              Work Experience
+            </h3>
+            <hr style={{ border: 'none', borderTop: '1px solid #1a1a1a', margin: '0 0 0.35rem 0' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              {experience.map((exp, idx) => (
+                <div key={idx}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '0.95em' }}>
+                    <span>
+                      {exp.role} <span style={{ fontWeight: 400 }}>at</span> {exp.company}
+                    </span>
+                    <span style={{ fontWeight: 400 }}>{exp.startDate} – {exp.endDate || 'Present'}</span>
+                  </div>
+                  {exp.location && (
+                    <div style={{ fontStyle: 'italic', fontSize: '0.85em', color: '#555', marginTop: '0.05rem' }}>
+                      {exp.location}
+                    </div>
+                  )}
+                  <div style={{ marginTop: '0.15rem' }}>
+                    {renderBullets(exp.description)}
+                  </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontStyle: 'italic', color: '#444', marginBottom: '0.35rem' }}>
-                  <span>{exp.company}, {exp.location}</span>
-                </div>
-                <p style={{ fontSize: '0.95em', lineHeight: '1.5', fontFamily: 'var(--font-sans)', color: '#2d3748', whiteSpace: 'pre-line' }}>{exp.description}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Education */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.3em', borderBottom: '1px solid #aaa', paddingBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Education</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: `${spacingScale * 0.8}rem` }}>
-            {education.map((edu, idx) => (
-              <div key={idx}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-                  <span>{edu.school}</span>
-                  <span style={{ fontWeight: 400, fontSize: '0.9em' }}>{edu.gradDate}</span>
+        {/* Projects */}
+        {projects.length > 0 && (
+          <div>
+            <h3 style={{ fontSize: '1.2em', fontWeight: 700, margin: '0 0 0.15rem 0', fontFamily: 'var(--font-serif)' }}>
+              Projects
+            </h3>
+            <hr style={{ border: 'none', borderTop: '1px solid #1a1a1a', margin: '0 0 0.35rem 0' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              {projects.map((proj, idx) => (
+                <div key={idx}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontWeight: 700, fontSize: '0.95em' }}>
+                    <span>
+                      {proj.title}
+                      {proj.technologies && (
+                        <span style={{ fontWeight: 400, fontStyle: 'italic', fontSize: '0.95em', color: '#1a1a1a' }}>
+                          {` | ${proj.technologies}`}
+                        </span>
+                      )}
+                    </span>
+                    <span style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      {proj.link && (
+                        <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', display: 'inline-flex', alignItems: 'center' }}>
+                          {proj.link.includes('github.com') ? <GithubIcon size={13} style={{ strokeWidth: 2 }} /> : <Globe size={13} style={{ strokeWidth: 2 }} />}
+                        </a>
+                      )}
+                    </span>
+                  </div>
+                  {proj.role && (
+                    <div style={{ fontStyle: 'italic', fontSize: '0.85em', color: '#555', marginTop: '0.05rem' }}>
+                      Role: {proj.role}
+                    </div>
+                  )}
+                  <div style={{ marginTop: '0.15rem' }}>
+                    {renderBullets(proj.description)}
+                  </div>
                 </div>
-                <p style={{ fontStyle: 'italic' }}>{edu.degree} {edu.score && `(GPA: ${edu.score})`}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Certifications */}
+        {certifications.length > 0 && (
+          <div>
+            <h3 style={{ fontSize: '1.2em', fontWeight: 700, margin: '0 0 0.15rem 0', fontFamily: 'var(--font-serif)' }}>
+              Certifications & Training
+            </h3>
+            <hr style={{ border: 'none', borderTop: '1px solid #1a1a1a', margin: '0 0 0.35rem 0' }} />
+            <ul style={{ margin: '0.15rem 0 0 1.25rem', padding: 0, listStyleType: 'disc', fontSize: '0.95em', color: '#1a1a1a' }}>
+              {certifications.map((cert, idx) => (
+                <li key={idx} style={{ marginBottom: '0.15rem' }}>
+                  <span>{cert.title}</span>{cert.issuer && ` – ${cert.issuer}`}{cert.date && ` (${cert.date})`}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Achievements */}
+        {achievements.length > 0 && (
+          <div>
+            <h3 style={{ fontSize: '1.2em', fontWeight: 700, margin: '0 0 0.15rem 0', fontFamily: 'var(--font-serif)' }}>
+              Achievements
+            </h3>
+            <hr style={{ border: 'none', borderTop: '1px solid #1a1a1a', margin: '0 0 0.35rem 0' }} />
+            <ul style={{ margin: '0.15rem 0 0 1.25rem', padding: 0, listStyleType: 'disc', fontSize: '0.95em', color: '#1a1a1a' }}>
+              {achievements.map((ach, idx) => (
+                <li key={idx} style={{ marginBottom: '0.15rem' }}>
+                  {ach.text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     );
   };

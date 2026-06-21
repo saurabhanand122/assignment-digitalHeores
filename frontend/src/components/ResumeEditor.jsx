@@ -19,6 +19,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
       website: '',
       github: '',
       linkedin: '',
+      geeksforgeeks: '',
       summary: ''
     },
     experience: [],
@@ -26,6 +27,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
     skills: [],
     projects: [],
     certifications: [],
+    achievements: [],
     links: []
   });
 
@@ -57,7 +59,23 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
     try {
       setLoading(true);
       const res = await axios.get(`${API_BASE}/resumes/${id}`);
-      setFormData(res.data);
+      const mergedData = {
+        ...res.data,
+        personal: {
+          github: '',
+          linkedin: '',
+          geeksforgeeks: '',
+          ...res.data.personal
+        },
+        achievements: res.data.achievements || [],
+        experience: res.data.experience || [],
+        education: res.data.education || [],
+        skills: res.data.skills || [],
+        projects: res.data.projects || [],
+        certifications: res.data.certifications || [],
+        links: res.data.links || []
+      };
+      setFormData(mergedData);
     } catch (err) {
       console.error('Error fetching resume:', err);
       alert('Could not fetch resume details');
@@ -800,6 +818,42 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                   />
                 </div>
                 <div className="form-group">
+                  <label className="form-label">GitHub URL</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.github || ''} 
+                    onChange={(e) => handlePersonalChange('github', e.target.value)} 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                    placeholder="e.g. https://github.com/username"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">LinkedIn URL</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.linkedin || ''} 
+                    onChange={(e) => handlePersonalChange('linkedin', e.target.value)} 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                    placeholder="e.g. https://linkedin.com/in/username"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">GeeksforGeeks URL</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.geeksforgeeks || ''} 
+                    onChange={(e) => handlePersonalChange('geeksforgeeks', e.target.value)} 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                    placeholder="e.g. https://geeksforgeeks.org/user/username"
+                  />
+                </div>
+                <div className="form-group">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
                     <label className="form-label" style={{ margin: 0 }}>Professional Summary</label>
                     <button 
@@ -1101,10 +1155,51 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
             )}
           </div>
 
-          {/* Section 8: Special PDF Resource Links */}
+          {/* Section 8: Achievements */}
+          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+            <div className="accordion-header" onClick={() => toggleSection('achievements')}>
+              <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>8. Achievements ({formData.achievements?.length || 0})</span>
+              {expandedSection === 'achievements' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
+
+            {expandedSection === 'achievements' && (
+              <div style={{ padding: '1.25rem', background: '#fafbfc' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: '1rem' }}>
+                  List key achievements, accomplishments, or awards that show your skills.
+                </p>
+                {(formData.achievements || []).map((ach, idx) => (
+                  <div key={idx} style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', background: '#fff', marginBottom: '1.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                      <span style={{ fontWeight: 700, color: 'var(--color-secondary)' }}>Achievement #{idx + 1}</span>
+                      <button onClick={() => removeArrayItem('achievements', idx)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Description / Detail</label>
+                      <input 
+                        type="text" 
+                        className="form-input" 
+                        value={ach.text} 
+                        onChange={(e) => updateArrayItem('achievements', idx, 'text', e.target.value)} 
+                        placeholder="e.g. Secured 2nd Position in Idea Pitching Startup Event"
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button 
+                  onClick={() => addArrayItem('achievements', { text: '' })} 
+                  className="btn btn-outline" 
+                  style={{ width: '100%', padding: '0.5rem' }}
+                >
+                  <Plus size={16} /> Add Achievement
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Section 9: Special PDF Resource Links */}
           <div style={{ borderBottom: '1px solid var(--color-border)' }}>
             <div className="accordion-header" onClick={() => toggleSection('links')}>
-              <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>8. Creative Blob Links ({formData.links.length})</span>
+              <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>9. Creative Blob Links ({formData.links.length})</span>
               {expandedSection === 'links' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </div>
 

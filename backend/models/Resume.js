@@ -19,7 +19,7 @@ const ResumeSchema = new mongoose.Schema({
     type: String,
     default: 'default' // 'default', 'terracotta', 'emerald', 'indigo'
   },
-  personal: {
+    personal: {
     fullName: { type: String, default: '' },
     title: { type: String, default: '' },
     email: { type: String, default: '' },
@@ -28,6 +28,7 @@ const ResumeSchema = new mongoose.Schema({
     website: { type: String, default: '' },
     github: { type: String, default: '' },
     linkedin: { type: String, default: '' },
+    geeksforgeeks: { type: String, default: '' },
     summary: { type: String, default: '' }
   },
   experience: [
@@ -69,6 +70,11 @@ const ResumeSchema = new mongoose.Schema({
       title: { type: String, default: '' },
       issuer: { type: String, default: '' },
       date: { type: String, default: '' }
+    }
+  ],
+  achievements: [
+    {
+      text: { type: String, default: '' }
     }
   ],
   links: [

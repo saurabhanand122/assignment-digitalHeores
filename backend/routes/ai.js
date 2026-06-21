@@ -225,6 +225,7 @@ The JSON structure must match exactly:
     "website": "https://saurabh.dev",
     "github": "https://github.com/saurabhanand",
     "linkedin": "https://linkedin.com/in/saurabhanand",
+    "geeksforgeeks": "https://geeksforgeeks.org/user/saurabhanand",
     "summary": "Professional summary paragraph..."
   },
   "experience": [
@@ -267,6 +268,18 @@ The JSON structure must match exactly:
       "technologies": "React, Node.js, AWS",
       "description": "Architected migration of legacy portal to cloud, improving load times by 40%...",
       "link": "https://github.com/saurabhanand/project-one"
+    }
+  ],
+  "certifications": [
+    {
+      "title": "AWS Certified Solutions Architect",
+      "issuer": "Amazon Web Services",
+      "date": "2023"
+    }
+  ],
+  "achievements": [
+    {
+      "text": "Won first place at national university hackathon among 50+ competing teams"
     }
   ]
 }

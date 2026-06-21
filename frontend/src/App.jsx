@@ -14,6 +14,7 @@ export default function App() {
   const [siteTheme, setSiteTheme] = useState(() => localStorage.getItem('site-theme') || 'cream');
 
   useEffect(() => {
+    document.body.setAttribute('data-site-theme', siteTheme);
     localStorage.setItem('site-theme', siteTheme);
   }, [siteTheme]);
 

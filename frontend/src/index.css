@@ -425,7 +425,7 @@ button, input, textarea, select {
 
 /* --- SITE THEMES CONFIGURATION --- */
 
-.app-container[data-site-theme="cream"] {
+body[data-site-theme="cream"] {
   --color-primary: #1b4360;      /* Deep Blue */
   --color-secondary: #e07a5f;    /* Terracotta */
   --color-bg: #f4f1de;           /* Warm Soft Cream */
@@ -436,7 +436,7 @@ button, input, textarea, select {
   --color-border: #e2e8f0;
 }
 
-.app-container[data-site-theme="dark"] {
+body[data-site-theme="dark"] {
   --color-primary: #a5b4fc;      /* Indigo Light */
   --color-secondary: #fda4af;    /* Rose Light */
   --color-bg: #0f172a;           /* Dark Slate */
@@ -447,7 +447,7 @@ button, input, textarea, select {
   --color-border: #334155;       /* Slate border */
 }
 
-.app-container[data-site-theme="indigo"] {
+body[data-site-theme="indigo"] {
   --color-primary: #4f46e5;      /* Indigo */
   --color-secondary: #06b6d4;    /* Cyan */
   --color-bg: #e0e7ff;           /* Pale Indigo */

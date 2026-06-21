@@ -361,11 +361,23 @@ body[data-site-theme="dark"] .form-input {
 
 /* Print Layout Optimization */
 @media print {
+  /* HIDE ALL SCROLLBARS */
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+
   html, body {
-    height: auto !important;
-    overflow: visible !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: hidden !important;
     background-color: #ffffff !important;
     color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   body::before {
@@ -386,16 +398,15 @@ body[data-site-theme="dark"] .form-input {
 
   .app-container {
     min-height: auto !important;
-    height: auto !important;
-    overflow: visible !important;
+    height: 100% !important;
+    overflow: hidden !important;
   }
 
   /* Force preview pane to fill page */
   .preview-pane-container {
     width: 100% !important;
-    height: auto !important;
-    overflow: visible !important;
-    overflow-y: visible !important;
+    height: 100% !important;
+    overflow: hidden !important;
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
@@ -403,13 +414,12 @@ body[data-site-theme="dark"] .form-input {
   }
 
   .resume-a4-page {
-    width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
     margin: 0 !important;
-    padding: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
     border: none !important;

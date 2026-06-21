@@ -8,8 +8,8 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
     title: 'My Professional Resume',
     template: 'slide',
     colorTheme: 'default',
-    fontSizeScale: 14,
-    spacingScale: 1.5,
+    fontSizeScale: 12,
+    spacingScale: 1.0,
     personal: {
       fullName: '',
       title: '',

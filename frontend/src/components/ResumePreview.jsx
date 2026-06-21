@@ -45,8 +45,8 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
         minHeight: '1123px',
         position: 'relative',
         fontSize: `${fontSizeScale}px`,
-        padding: `${spacingScale * 1.8}rem ${spacingScale * 2}rem`,
-        gap: `${spacingScale * 1.3}rem`,
+        padding: `${spacingScale * 1.1}rem ${spacingScale * 1.3}rem`,
+        gap: `${spacingScale * 0.75}rem`,
         transition: 'all var(--transition-normal)'
       }}>
         {/* Top Accent Line */}
@@ -113,7 +113,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
             <h2 style={{ fontSize: '1.25em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35em', marginBottom: '1em', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Work Experience
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: `${spacingScale * 0.8}rem` }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: `${spacingScale * 0.4}rem` }}>
               {experience.map((exp, idx) => (
                 <div 
                   key={idx} 
@@ -212,7 +212,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
         )}
 
         {/* Skills & Creative Links */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '2rem', marginTop: 'auto', borderTop: '2px solid #f1f5f9', paddingTop: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '1.5rem', marginTop: '0.5rem', borderTop: '2px solid #f1f5f9', paddingTop: '0.75rem' }}>
           {/* Skills */}
           <div>
             <h2 style={{ fontSize: '1.1em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', marginBottom: '0.75em', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -273,8 +273,8 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
         display: 'grid',
         gridTemplateColumns: '260px 1fr',
         fontSize: `${fontSizeScale}px`,
-        padding: `${spacingScale * 1.5}rem ${spacingScale * 1.8}rem`,
-        gap: `${spacingScale * 2.0}rem`,
+        padding: `${spacingScale * 1.0}rem ${spacingScale * 1.25}rem`,
+        gap: `${spacingScale * 1.25}rem`,
         transition: 'all var(--transition-normal)'
       }}>
         {/* Left Column (Sidebar) */}
@@ -374,7 +374,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
         minHeight: '1123px',
         fontFamily: 'var(--font-serif)',
         fontSize: `${fontSizeScale}px`,
-        padding: `${spacingScale * 2.2}rem ${spacingScale * 2.5}rem`,
+        padding: `${spacingScale * 1.25}rem ${spacingScale * 1.5}rem`,
         transition: 'all var(--transition-normal)'
       }}>
         {/* Header */}

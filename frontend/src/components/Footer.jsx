@@ -22,7 +22,7 @@ export default function Footer() {
         alignItems: 'center'
       }}>
         
-        {/* Footer Top: Branding & Built Badge */}
+        {/* Footer Top: Branding */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -41,38 +41,6 @@ export default function Footer() {
               Designed for outstanding visual portfolios.
             </p>
           </div>
-
-          {/* Mandatory Button */}
-          <a 
-            href="https://digitalheroesco.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="digital-heroes-badge"
-            style={{
-              background: 'var(--color-primary)',
-              color: '#ffffff',
-              padding: '0.6rem 1.5rem',
-              borderRadius: 'var(--radius-full)',
-              fontFamily: 'var(--font-serif)',
-              fontWeight: 700,
-              fontSize: '0.9rem',
-              boxShadow: 'var(--shadow-sm)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              transition: 'all var(--transition-normal)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--color-secondary)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--color-primary)';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            Built for Digital Heroes
-          </a>
         </div>
 
         {/* Footer Middle: Tech Stack & Credits */}
@@ -115,7 +83,7 @@ export default function Footer() {
         }}>
           <span>&copy; {new Date().getFullYear()} Resume Showcase. Made with</span>
           <Heart size={12} style={{ color: '#ef4444', fill: '#ef4444' }} />
-          <span>for Saurabh Anand's portfolio task.</span>
+          <span>by Saurabh Anand.</span>
         </div>
         
       </div>

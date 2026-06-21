@@ -39,6 +39,12 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
   // Input highlight tracking
   const [activeHighlightField, setActiveHighlightField] = useState(null);
 
+  // AI Resume Generator states
+  const [generatorLoading, setGeneratorLoading] = useState(false);
+  const [genJobTitle, setGenJobTitle] = useState('');
+  const [genCompany, setGenCompany] = useState('');
+  const [genBackground, setGenBackground] = useState('');
+
   useEffect(() => {
     if (id) {
       fetchResumeDetails();
@@ -178,6 +184,55 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
 
     setExtractedData(null);
     alert('Extracted details merged into your draft successfully!');
+  };
+
+  const handleGenerateResume = async () => {
+    if (!genJobTitle.trim()) {
+      alert('Please enter a target job title to generate your resume.');
+      return;
+    }
+
+    setGeneratorLoading(true);
+    try {
+      const res = await axios.post(`${API_BASE}/ai/generate-resume`, {
+        jobTitle: genJobTitle,
+        company: genCompany,
+        background: genBackground
+      });
+
+      if (res.data) {
+        // Map the generated skills if they are in simple format (strings instead of {name, level})
+        const mappedSkills = (res.data.skills || []).map(s => {
+          if (typeof s === 'string') {
+            return { name: s, level: 4 };
+          }
+          return { name: s.name || '', level: s.level || 4 };
+        });
+
+        // Set form data with the generated resume and preserve metadata fields
+        setFormData(prev => ({
+          ...prev,
+          title: res.data.title || prev.title,
+          personal: {
+            ...prev.personal,
+            ...(res.data.personal || {})
+          },
+          experience: res.data.experience || [],
+          education: res.data.education || [],
+          skills: mappedSkills,
+          projects: res.data.projects || []
+        }));
+
+        alert('Success! Gemini AI has generated a complete professional resume for you. Review the fields and save your draft.');
+        // Expand the personal section to show the new content
+        setExpandedSection('personal');
+      }
+    } catch (err) {
+      console.error('Resume generation error:', err);
+      alert('Failed to generate resume: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setGeneratorLoading(false);
+    }
   };
 
   const handlePersonalChange = (field, val) => {
@@ -483,6 +538,102 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                         Merge into Draft
                       </button>
                     </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Section 0.5: AI Resume Generator */}
+          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+            <div className="accordion-header" onClick={() => toggleSection('generator')}>
+              <span style={{ fontWeight: 700, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Sparkles size={16} style={{ color: 'var(--color-secondary)' }} />
+                <span>AI Resume Generator (From Scratch)</span>
+              </span>
+              {expandedSection === 'generator' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
+
+            {expandedSection === 'generator' && (
+              <div style={{ padding: '1.25rem', background: 'var(--color-card-bg)' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: '1.25rem', lineHeight: 1.4 }}>
+                  Enter your target role and brief background to let Gemini AI generate a complete, high-impact resume draft (summary, jobs, skills, education, and projects) instantly.
+                </p>
+
+                {!generatorLoading ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                    <div className="form-group" style={{ margin: 0 }}>
+                      <label className="form-label" style={{ fontSize: '0.75rem', fontWeight: 700 }}>Target Job Title *</label>
+                      <input 
+                        type="text" 
+                        className="form-input" 
+                        placeholder="e.g. Senior Frontend Engineer"
+                        value={genJobTitle}
+                        onChange={(e) => setGenJobTitle(e.target.value)}
+                        style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <div className="form-group" style={{ margin: 0 }}>
+                      <label className="form-label" style={{ fontSize: '0.75rem', fontWeight: 700 }}>Target Company (Optional)</label>
+                      <input 
+                        type="text" 
+                        className="form-input" 
+                        placeholder="e.g. Google"
+                        value={genCompany}
+                        onChange={(e) => setGenCompany(e.target.value)}
+                        style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <div className="form-group" style={{ margin: 0 }}>
+                      <label className="form-label" style={{ fontSize: '0.75rem', fontWeight: 700 }}>Your Background & Key Tech (Optional)</label>
+                      <textarea 
+                        className="form-input" 
+                        rows={3}
+                        placeholder="e.g. 5+ years building React/Node apps. Expert in state management, TypeScript, and AWS cloud migrations."
+                        value={genBackground}
+                        onChange={(e) => setGenBackground(e.target.value)}
+                        style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <button 
+                      onClick={handleGenerateResume}
+                      className="btn btn-primary"
+                      style={{ 
+                        marginTop: '0.5rem',
+                        padding: '0.75rem',
+                        fontSize: '0.85rem',
+                        fontWeight: 700,
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <Sparkles size={16} />
+                      Generate Complete Resume
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                    <div style={{ 
+                      display: 'inline-block', 
+                      width: '30px', 
+                      height: '30px', 
+                      border: '3px solid rgba(27, 67, 96, 0.1)', 
+                      borderTopColor: 'var(--color-secondary)', 
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}></div>
+                    <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--color-primary)', fontWeight: 800 }}>
+                      Gemini AI is writing your resume...
+                    </p>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
+                      This may take 10-15 seconds. Please do not close the window.
+                    </p>
                   </div>
                 )}
               </div>

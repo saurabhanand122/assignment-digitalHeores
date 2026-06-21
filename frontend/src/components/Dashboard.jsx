@@ -532,41 +532,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE, user
         </div>
       )}
 
-      {/* Mandatory Button: Built for Digital Heroes */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5rem' }}>
-        <a 
-          href="https://digitalheroesco.com" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="digital-heroes-badge"
-          style={{
-            background: 'var(--color-primary)',
-            color: '#ffffff',
-            padding: '1rem 2.5rem',
-            borderRadius: 'var(--radius-full)',
-            fontFamily: 'var(--font-serif)',
-            fontWeight: 700,
-            fontSize: '1.15rem',
-            boxShadow: 'var(--shadow-md)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'var(--color-secondary)';
-            e.currentTarget.style.transform = 'translateY(-3px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(224, 122, 95, 0.3)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'var(--color-primary)';
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-          }}
-        >
-          Built for Digital Heroes <ArrowRight size={18} />
-        </a>
-      </div>
+
 
       {/* CSS Spin Keyframe inline */}
       <style>{`

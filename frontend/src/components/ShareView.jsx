@@ -120,38 +120,7 @@ export default function ShareView({ id, onBackToDashboard, API_BASE }) {
         width: '100%',
         maxWidth: '800px'
       }}>
-        {/* Mandatory Button */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <a 
-            href="https://digitalheroesco.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="digital-heroes-badge"
-            style={{
-              background: 'var(--color-primary)',
-              color: '#ffffff',
-              padding: '0.75rem 1.75rem',
-              borderRadius: 'var(--radius-full)',
-              fontFamily: 'var(--font-serif)',
-              fontWeight: 700,
-              fontSize: '1rem',
-              boxShadow: 'var(--shadow-sm)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              transition: 'all var(--transition-normal)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--color-secondary)';
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--color-primary)';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            Built for Digital Heroes
-          </a>
-        </div>
+
 
         {/* Developer Contact Info (Mandatory Requirement) */}
         <div style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>

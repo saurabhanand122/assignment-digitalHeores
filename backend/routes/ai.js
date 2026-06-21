@@ -204,4 +204,93 @@ ${extractedText}`;
   }
 });
 
+// 5. POST /generate-resume - Use AI to generate a full resume from a title/prompt
+router.post('/generate-resume', async (req, res) => {
+  const { jobTitle, background, company } = req.body;
+
+  if (!jobTitle) {
+    return res.status(400).json({ error: 'Job title is required to generate a resume.' });
+  }
+
+  const prompt = `You are a world-class professional resume writer and career coach. Generate a complete, highly compelling resume in JSON format for a candidate applying for the job title "${jobTitle}"${company ? ` at company "${company}"` : ''}.${background ? ` The candidate's background is: "${background}".` : ''}
+The JSON structure must match exactly:
+{
+  "title": "Resume for ${jobTitle}",
+  "personal": {
+    "fullName": "Saurabh Anand",
+    "title": "${jobTitle}",
+    "email": "saurabh.anand122@gmail.com",
+    "phone": "+1 (555) 019-2834",
+    "location": "San Francisco, CA",
+    "website": "https://saurabh.dev",
+    "github": "https://github.com/saurabhanand",
+    "linkedin": "https://linkedin.com/in/saurabhanand",
+    "summary": "Professional summary paragraph..."
+  },
+  "experience": [
+    {
+      "role": "${jobTitle}",
+      "company": "${company || 'Tech Solutions Inc.'}",
+      "location": "San Francisco, CA",
+      "startDate": "Jan 2022",
+      "endDate": "Present",
+      "description": "Led development of... Designed... Collaborated with... (make it 3 detailed bullet points separated by newlines)"
+    },
+    {
+      "role": "Associate ${jobTitle}",
+      "company": "Innovation Labs",
+      "location": "Boston, MA",
+      "startDate": "Mar 2020",
+      "endDate": "Dec 2021",
+      "description": "Developed... Improved efficiency of... Managed... (make it 3 detailed bullet points separated by newlines)"
+    }
+  ],
+  "education": [
+    {
+      "school": "State University",
+      "degree": "Bachelor of Science in Computer Science",
+      "location": "City, State",
+      "duration": "2016 - 2020"
+    }
+  ],
+  "skills": [
+    { "name": "Skill 1", "level": 5 },
+    { "name": "Skill 2", "level": 4 },
+    { "name": "Skill 3", "level": 4 },
+    { "name": "Skill 4", "level": 5 },
+    { "name": "Skill 5", "level": 3 }
+  ],
+  "projects": [
+    {
+      "title": "Enterprise App Migration",
+      "role": "Lead Architect",
+      "technologies": "React, Node.js, AWS",
+      "description": "Architected migration of legacy portal to cloud, improving load times by 40%...",
+      "link": "https://github.com/saurabhanand/project-one"
+    }
+  ]
+}
+Make the generated content sound extremely realistic, professional, and tailored. Use high-impact action verbs.
+Return ONLY this JSON block. Do not include markdown tags (like \`\`\`json), explanations, or introduction text.`;
+
+  let responseText = '';
+  try {
+    responseText = await callGemini(prompt);
+    
+    let cleanText = responseText.trim();
+    if (cleanText.startsWith('```')) {
+      cleanText = cleanText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
+    }
+
+    const parsedData = JSON.parse(cleanText);
+    res.json(parsedData);
+  } catch (err) {
+    console.error('Failed generating/parsing resume:', err.message, '\nRaw response:', responseText);
+    res.status(500).json({ 
+      error: 'Failed to generate resume details: ' + err.message,
+      rawResponse: responseText || null 
+    });
+  }
+});
+
 module.exports = router;

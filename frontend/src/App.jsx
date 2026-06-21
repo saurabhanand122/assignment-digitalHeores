@@ -95,49 +95,87 @@ export default function App() {
   }
 
   const getClerkAppearance = () => {
-    const isDark = siteTheme === 'dark';
+    // Choose colors based on the theme
+    let primaryColor, bgColor, textColor, borderColor, inputBg, hoverBg;
+    if (siteTheme === 'dark') {
+      primaryColor = '#6fa37a';
+      bgColor = '#0d0d21';
+      textColor = '#f1f5f9';
+      borderColor = 'rgba(111, 163, 122, 0.25)';
+      inputBg = '#14142b';
+      hoverBg = 'rgba(241, 245, 249, 0.08)';
+    } else if (siteTheme === 'indigo') {
+      primaryColor = '#24453a';
+      bgColor = '#e6f0e9';
+      textColor = '#0f1713';
+      borderColor = 'rgba(36, 69, 58, 0.25)';
+      inputBg = '#ffffff';
+      hoverBg = 'rgba(15, 23, 19, 0.08)';
+    } else { // cream
+      primaryColor = '#3f6b54';
+      bgColor = '#fcfbf7';
+      textColor = '#0a0a1a';
+      borderColor = 'rgba(63, 107, 84, 0.22)';
+      inputBg = '#ffffff';
+      hoverBg = 'rgba(10, 10, 26, 0.08)';
+    }
+
     return {
       variables: {
-        colorPrimary: isDark ? '#81b29a' : '#1b4360',
-        colorBackground: isDark ? '#0d0d21' : '#fcfbf7',
-        colorText: isDark ? '#f5f0e8' : '#1b4360',
-        colorInputBackground: isDark ? '#14142b' : '#ffffff',
-        colorInputText: isDark ? '#f5f0e8' : '#1b4360',
-        colorInputBorder: isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)',
+        colorPrimary: primaryColor,
+        colorBackground: bgColor,
+        colorText: textColor,
+        colorInputBackground: inputBg,
+        colorInputText: textColor,
+        colorInputBorder: borderColor,
         borderRadius: '8px',
         fontFamily: 'Inter, system-ui, sans-serif'
       },
       elements: {
         card: {
-          background: isDark ? '#0d0d21' : '#fcfbf7',
-          border: `1px solid ${isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)'}`,
+          background: bgColor,
+          border: `1px solid ${borderColor}`,
           boxShadow: 'var(--shadow-xl)',
           borderRadius: 'var(--radius-lg)'
         },
         userButtonPopoverCard: {
-          background: isDark ? '#0d0d21' : '#fcfbf7',
-          border: `1px solid ${isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)'}`,
+          background: bgColor,
+          border: `1px solid ${borderColor}`,
           boxShadow: 'var(--shadow-lg)',
-          borderRadius: 'var(--radius-md)'
+          borderRadius: 'var(--radius-md)',
+          color: textColor
         },
         userButtonPopoverActionButton: {
+          color: textColor,
           '&:hover': {
-            background: isDark ? 'rgba(245, 240, 232, 0.05)' : 'rgba(27, 67, 96, 0.05)'
+            background: hoverBg
           }
         },
+        userButtonPopoverActionButtonText: {
+          color: textColor,
+          fontWeight: 600
+        },
+        userButtonPopoverActionButtonIcon: {
+          color: textColor,
+          opacity: 0.8
+        },
+        userButtonPopoverFooter: {
+          background: bgColor,
+          borderTop: `1px solid ${borderColor}`
+        },
         socialButtonsBlockButton: {
-          border: `1px solid ${isDark ? 'rgba(245, 240, 232, 0.15)' : 'rgba(27, 67, 96, 0.15)'}`,
-          background: isDark ? '#14142b' : '#ffffff',
-          color: isDark ? '#f5f0e8' : '#1b4360',
+          border: `1px solid ${borderColor}`,
+          background: inputBg,
+          color: textColor,
           '&:hover': {
-            background: isDark ? 'rgba(245, 240, 232, 0.05)' : 'rgba(27, 67, 96, 0.05)'
+            background: hoverBg
           }
         },
         formButtonPrimary: {
-          background: isDark ? 'var(--color-secondary)' : 'var(--color-primary)',
+          background: primaryColor,
           color: '#ffffff',
           '&:hover': {
-            background: isDark ? 'var(--color-primary)' : 'var(--color-secondary)'
+            background: primaryColor === '#6fa37a' ? '#3f6b54' : '#cd8a4b'
           }
         },
         footer: {

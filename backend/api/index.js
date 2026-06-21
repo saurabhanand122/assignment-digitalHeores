@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
-const resumeRoutes = require('./routes/resumes');
+const resumeRoutes = require('../routes/resumes');
 app.use('/api/resumes', resumeRoutes);
 
 // Root route

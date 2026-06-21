@@ -27,7 +27,6 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
     links: []
   });
 
-  const [activeSlide, setActiveSlide] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
@@ -625,32 +624,9 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
           boxShadow: 'var(--shadow-sm)',
           border: '1px solid var(--color-border)'
         }}>
-          {formData.template === 'slide' ? (
-            <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, marginRight: '0.5rem' }}>Preview Slide:</span>
-              {[0, 1, 2, 3, 4, 5].map((slideNum) => (
-                <button 
-                  key={slideNum}
-                  onClick={() => setActiveSlide(slideNum)}
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    border: activeSlide === slideNum ? 'none' : '1px solid var(--color-border)',
-                    background: activeSlide === slideNum ? 'var(--color-primary)' : '#fff',
-                    color: activeSlide === slideNum ? '#fff' : 'var(--color-text-dark)',
-                    cursor: 'pointer',
-                    fontWeight: 700,
-                    fontSize: '0.85rem'
-                  }}
-                >
-                  {slideNum + 1}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>Scrollable page view active</span>
-          )}
+          <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-primary)' }}>
+            {formData.template === 'slide' ? 'Creative A4 Document Layout' : formData.template === 'modern' ? 'Modern Professional Two-Column' : 'Minimalist Classic Serif'}
+          </span>
 
           <button onClick={triggerPrint} className="btn btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: 'var(--radius-sm)' }}>
             <Printer size={14} /> Print PDF
@@ -659,7 +635,7 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
 
         {/* The dynamic preview rendering */}
         <div style={{ width: '100%', maxWidth: '800px', flex: 1 }}>
-          <ResumePreview data={formData} activeSlide={activeSlide} isInteractive={true} />
+          <ResumePreview data={formData} activeSlide={0} isInteractive={false} />
         </div>
       </div>
     </div>

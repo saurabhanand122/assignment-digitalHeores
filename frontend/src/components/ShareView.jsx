@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ResumePreview from './ResumePreview';
-import { Printer, Mail, Share2, Award, Briefcase, GraduationCap, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Printer, Mail, Share2, Award, Briefcase, GraduationCap } from 'lucide-react';
 
 export default function ShareView({ id, onBackToDashboard, API_BASE }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
     fetchResume();
@@ -99,32 +98,7 @@ export default function ShareView({ id, onBackToDashboard, API_BASE }) {
 
       {/* Main Preview Container */}
       <div style={{ width: '100%', maxWidth: '800px', flex: 1 }}>
-        <ResumePreview data={data} activeSlide={activeSlide} isInteractive={isSlideTemplate} />
-
-        {/* Slide navigation controls (only visible on screen for slide layout) */}
-        {isSlideTemplate && (
-          <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', background: '#fff', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
-            <button 
-              disabled={activeSlide === 0}
-              onClick={() => setActiveSlide(prev => Math.max(0, prev - 1))}
-              className="btn btn-outline"
-              style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', opacity: activeSlide === 0 ? 0.5 : 1, cursor: activeSlide === 0 ? 'not-allowed' : 'pointer' }}
-            >
-              <ChevronLeft size={16} /> Previous
-            </button>
-            <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>
-              Slide {activeSlide + 1} of 6
-            </span>
-            <button 
-              disabled={activeSlide === 5}
-              onClick={() => setActiveSlide(prev => Math.min(5, prev + 1))}
-              className="btn btn-outline"
-              style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', opacity: activeSlide === 5 ? 0.5 : 1, cursor: activeSlide === 5 ? 'not-allowed' : 'pointer' }}
-            >
-              Next <ChevronRight size={16} />
-            </button>
-          </div>
-        )}
+        <ResumePreview data={data} activeSlide={0} isInteractive={false} />
       </div>
 
       {/* Footer Branding Info */}

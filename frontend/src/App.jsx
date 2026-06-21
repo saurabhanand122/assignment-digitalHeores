@@ -88,7 +88,7 @@ export default function App() {
         alignItems: 'center',
         padding: '0.85rem 2rem',
         borderBottom: '1px solid var(--color-border)',
-        background: 'rgba(255, 255, 255, 0.45)',
+        background: 'var(--color-card-bg)',
         backdropFilter: 'blur(10px)',
         zIndex: 50,
         position: 'sticky',
@@ -106,11 +106,11 @@ export default function App() {
             fontWeight: 800,
             fontSize: '1.25rem',
             color: 'var(--color-primary)',
-            fontFamily: 'var(--font-serif)'
+            fontFamily: 'var(--font-header)'
           }}
         >
           <Sparkles size={20} style={{ color: 'var(--color-secondary)' }} />
-          <span>Digital Heroes Resumes</span>
+          <span>Resume Builder</span>
         </div>
 
         {/* Theme Selector Widget */}
@@ -118,23 +118,23 @@ export default function App() {
           display: 'flex', 
           alignItems: 'center', 
           gap: '0.75rem', 
-          background: 'rgba(255, 255, 255, 0.65)', 
+          background: 'var(--color-card-bg)', 
           padding: '0.35rem 0.75rem', 
           borderRadius: 'var(--radius-full)', 
           border: '1px solid var(--color-border)' 
         }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e293b', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-dark)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
             <Palette size={13} style={{ color: 'var(--color-secondary)' }} /> Switch Theme:
           </span>
           <div style={{ display: 'flex', gap: '0.35rem' }}>
             <button 
               onClick={() => setSiteTheme('cream')}
-              title="Warm Cream Theme"
+              title="Warm Cream Paper Theme"
               style={{
                 width: '18px',
                 height: '18px',
                 borderRadius: '50%',
-                background: '#f4f1de',
+                background: '#f5f0e8',
                 border: siteTheme === 'cream' ? '2.5px solid var(--color-primary)' : '1px solid #94a3b8',
                 cursor: 'pointer',
                 padding: 0
@@ -142,12 +142,12 @@ export default function App() {
             />
             <button 
               onClick={() => setSiteTheme('indigo')}
-              title="Royal Indigo Theme"
+              title="Moss Emerald Theme"
               style={{
                 width: '18px',
                 height: '18px',
                 borderRadius: '50%',
-                background: '#c7d2fe',
+                background: '#e6f0e9',
                 border: siteTheme === 'indigo' ? '2.5px solid var(--color-primary)' : '1px solid #94a3b8',
                 cursor: 'pointer',
                 padding: 0
@@ -155,13 +155,13 @@ export default function App() {
             />
             <button 
               onClick={() => setSiteTheme('dark')}
-              title="Sleek Dark Theme"
+              title="Deep Space Ink Theme"
               style={{
                 width: '18px',
                 height: '18px',
                 borderRadius: '50%',
-                background: '#0f172a',
-                border: siteTheme === 'dark' ? '2.5px solid #a5b4fc' : '1px solid #94a3b8',
+                background: '#0a0a1a',
+                border: siteTheme === 'dark' ? '2.5px solid var(--color-primary)' : '1px solid #94a3b8',
                 cursor: 'pointer',
                 padding: 0
               }}

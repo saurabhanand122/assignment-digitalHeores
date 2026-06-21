@@ -7,7 +7,7 @@ export default function Footer() {
       marginTop: 'auto',
       borderTop: '1px solid var(--color-border)',
       padding: '2.5rem 2rem',
-      background: 'rgba(255, 255, 255, 0.4)',
+      background: 'var(--color-card-bg)',
       backdropFilter: 'blur(8px)',
       textAlign: 'center',
       zIndex: 5,
@@ -30,12 +30,12 @@ export default function Footer() {
           width: '100%',
           flexWrap: 'wrap',
           gap: '1rem',
-          borderBottom: '1px solid rgba(27,67,96,0.06)',
+          borderBottom: '1px solid var(--color-border)',
           paddingBottom: '1.25rem'
         }}>
           <div style={{ textAlign: 'left' }}>
-            <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-primary)', margin: 0 }}>
-              Creative Resume Builder
+            <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-header)', color: 'var(--color-primary)', margin: 0 }}>
+              Resume Builder
             </h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '0.15rem' }}>
               Designed for outstanding visual portfolios.

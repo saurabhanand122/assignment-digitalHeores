@@ -73,7 +73,15 @@ const ResumeSchema = new mongoose.Schema({
       url: { type: String, default: '' },
       iconType: { type: String, default: 'smiley' } // 'smiley', 'video', 'menu'
     }
-  ]
+  ],
+  fontSizeScale: {
+    type: Number,
+    default: 14
+  },
+  spacingScale: {
+    type: Number,
+    default: 1.5
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Resume', ResumeSchema);

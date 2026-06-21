@@ -52,72 +52,115 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
   );
 
   return (
-    <div className="animate-fade-in" style={{ padding: '3rem 2rem', position: 'relative', minHeight: '100vh', background: 'linear-gradient(135deg, #f4f1de 0%, #fbfaf5 100%)', overflow: 'hidden' }}>
+    <div className="animate-fade-in" style={{ padding: '3rem 2rem', position: 'relative', minHeight: '100vh', background: 'transparent', overflow: 'hidden' }}>
       
       {/* Animated Floating Background Blobs */}
       <div className="blob-decor blob-primary animate-blob-1" style={{ top: '10%', left: '-5%', width: '400px', height: '400px', opacity: 0.12 }}></div>
       <div className="blob-decor blob-secondary animate-blob-2" style={{ bottom: '15%', right: '-5%', width: '350px', height: '350px', opacity: 0.1 }}></div>
       <div className="blob-decor blob-accent animate-blob-1" style={{ top: '60%', left: '40%', width: '250px', height: '250px', opacity: 0.08 }}></div>
 
-      {/* Glassmorphic Hero Banner */}
-      <div className="glass-panel animate-slide-up" style={{
+      {/* Glassmorphic Hero Banner (Responsive Two Column Grid) */}
+      <div className="glass-panel animate-slide-up dashboard-hero-grid" style={{
         borderRadius: 'var(--radius-lg)',
-        padding: '3rem 2rem',
+        padding: '3rem 2.5rem',
         marginBottom: '3rem',
-        textAlign: 'center',
         position: 'relative',
-        boxShadow: '0 10px 30px rgba(27, 67, 96, 0.05)'
+        boxShadow: '0 10px 30px rgba(27, 67, 96, 0.03)',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '2.5rem',
+        alignItems: 'center'
       }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(224, 122, 95, 0.1)', padding: '0.4rem 1rem', borderRadius: 'var(--radius-full)', color: 'var(--color-secondary)', fontSize: '0.85rem', fontWeight: 700, marginBottom: '1.25rem', border: '1px solid rgba(224, 122, 95, 0.2)' }}>
-          <Sparkles size={14} /> Design Showcase Platform
-        </div>
-        
-        <h1 style={{ 
-          fontSize: '3rem', 
-          fontFamily: 'var(--font-serif)',
-          lineHeight: 1.15,
-          marginBottom: '1rem',
-          background: 'linear-gradient(to right, var(--color-primary) 30%, var(--color-secondary) 80%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>
-          Creative Resume Builder & Showcase
-        </h1>
-        
-        <p style={{ fontSize: '1.15rem', color: 'var(--color-text-dark)', maxWidth: '650px', margin: '0 auto 2rem', opacity: 0.85, lineHeight: 1.6 }}>
-          Build, customize, and share visually stunning, responsive A4 resumes inspired by premium presentation designs.
-        </p>
+        {/* Left Column: Heading and info */}
+        <div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(205, 138, 75, 0.15)', padding: '0.4rem 1rem', borderRadius: 'var(--radius-full)', color: 'var(--color-secondary)', fontSize: '0.85rem', fontWeight: 700, marginBottom: '1.25rem', border: '1px solid rgba(205, 138, 75, 0.25)' }}>
+            <Sparkles size={14} /> Creative Presentation Workspace
+          </div>
+          
+          <h1 style={{ 
+            fontSize: '3rem', 
+            fontFamily: 'var(--font-header)',
+            lineHeight: 1.15,
+            marginBottom: '1rem',
+            color: 'var(--color-primary)'
+          }}>
+            Creative <span className="serif" style={{ color: 'var(--color-secondary)', fontStyle: 'italic' }}>Resume</span> Builder
+          </h1>
+          
+          <p style={{ fontSize: '1.1rem', color: 'var(--color-text-dark)', maxWidth: '600px', marginBottom: '2rem', opacity: 0.85, lineHeight: 1.6 }}>
+            Design, edit, and share visually stunning, responsive A4 resumes with custom spacing, premium typography, and theme configurations.
+          </p>
 
-        {/* Developer Contact Card (Mandatory Requirement) */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '1.5rem', 
-          flexWrap: 'wrap',
-          background: 'rgba(255, 255, 255, 0.8)',
-          padding: '0.85rem 2rem',
-          borderRadius: 'var(--radius-full)',
-          width: 'fit-content',
-          margin: '0 auto',
-          boxShadow: 'var(--shadow-sm)',
-          border: '1px solid var(--color-border)',
-          transition: 'all 0.3s ease'
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.borderColor = 'var(--color-primary)';
-          e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.borderColor = 'var(--color-border)';
-          e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-        }}
-        >
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: 'var(--color-primary)' }}>
-            <strong>Developer:</strong> Saurabh Anand
-          </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-dark)' }}>
-            <Mail size={16} style={{ color: 'var(--color-secondary)' }} /> saurabh.anand122@gmail.com
-          </span>
+          {/* Developer Contact Card (Mandatory Requirement) */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '1rem', 
+            background: 'var(--color-card-bg)',
+            padding: '0.75rem 1.25rem',
+            borderRadius: 'var(--radius-md)',
+            width: 'fit-content',
+            boxShadow: 'var(--shadow-sm)',
+            border: '1px solid var(--color-border)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.borderColor = 'var(--color-primary)';
+            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.borderColor = 'var(--color-border)';
+            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+          }}
+          >
+            <img 
+              src="/developer_avatar.png" 
+              alt="Saurabh Anand" 
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                border: '2px solid var(--color-primary)',
+                objectFit: 'cover'
+              }}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: 700, color: 'var(--color-text-dark)', fontSize: '0.95rem', lineHeight: 1.2 }}>
+                Saurabh Anand
+              </span>
+              <a 
+                href="mailto:saurabh.anand122@gmail.com" 
+                style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: '0.25rem', 
+                  color: 'var(--color-secondary)',
+                  fontSize: '0.825rem',
+                  fontWeight: 600,
+                  marginTop: '0.15rem'
+                }}
+              >
+                <Mail size={12} /> saurabh.anand122@gmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Hero Illustration */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <img 
+            src="/hero_showcase.png" 
+            alt="Resume Builder Showcase" 
+            style={{
+              width: '100%',
+              maxWidth: '360px',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--color-border)',
+              boxShadow: 'var(--shadow-lg)',
+              aspectRatio: '16/11',
+              objectFit: 'cover'
+            }}
+          />
         </div>
       </div>
 
@@ -232,13 +275,14 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
               border: '1px solid var(--color-border)',
               borderRadius: 'var(--radius-md)',
               outline: 'none',
-              background: '#fff',
+              background: 'var(--color-card-bg)',
+              color: 'var(--color-text-dark)',
               boxShadow: 'var(--shadow-sm)',
               transition: 'all 0.3s ease'
             }}
             onFocus={e => {
               e.target.style.borderColor = 'var(--color-primary)';
-              e.target.style.boxShadow = '0 0 0 3px rgba(27,67,96,0.1)';
+              e.target.style.boxShadow = '0 0 0 3px rgba(111, 163, 122, 0.18)';
             }}
             onBlur={e => {
               e.target.style.borderColor = 'var(--color-border)';
@@ -253,18 +297,17 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
           onClick={onCreateNew} 
           className="btn btn-primary" 
           style={{ 
-            padding: '0.85rem 2rem', 
+            padding: '0.85rem 2.25rem', 
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(to right, var(--color-primary), #123048)',
             boxShadow: 'var(--shadow-md)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.transform = 'scale(1.03)';
-            e.currentTarget.style.boxShadow = '0 6px 15px rgba(27, 67, 96, 0.25)';
+            e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 6px 15px rgba(111, 163, 122, 0.25)';
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
             e.currentTarget.style.boxShadow = 'var(--shadow-md)';
           }}
         >
@@ -335,7 +378,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
               key={resume._id} 
               onClick={() => onEdit(resume._id)}
               style={{
-                background: '#fff',
+                background: 'var(--color-card-bg)',
                 borderRadius: 'var(--radius-md)',
                 boxShadow: 'var(--shadow-md)',
                 border: '1px solid var(--color-border)',
@@ -350,7 +393,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-6px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(27,67,96,0.1)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
                 e.currentTarget.style.borderColor = 'var(--color-primary)';
               }}
               onMouseLeave={(e) => {

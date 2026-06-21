@@ -59,16 +59,16 @@ export default function ShareView({ id, onBackToDashboard, API_BASE }) {
   const isSlideTemplate = data.template === 'slide';
 
   return (
-    <div className="animate-fade-in" style={{ padding: '2rem 1.5rem', background: '#f8fafc', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="animate-fade-in" style={{ padding: '2rem 1.5rem', background: 'transparent', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       
       {/* Top Header Panel (Controls) */}
-      <div className="no-print" style={{ 
+      <div className="no-print glass-panel" style={{ 
         width: '100%', 
         maxWidth: '800px', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        background: '#fff', 
+        background: 'var(--color-card-bg)', 
         padding: '1rem 1.5rem', 
         borderRadius: 'var(--radius-md)',
         boxShadow: 'var(--shadow-sm)',
@@ -76,7 +76,7 @@ export default function ShareView({ id, onBackToDashboard, API_BASE }) {
         border: '1px solid var(--color-border)'
       }}>
         <div>
-          <h3 style={{ margin: 0, color: 'var(--color-primary)', fontSize: '1.15rem' }}>
+          <h3 style={{ margin: 0, color: 'var(--color-primary)', fontSize: '1.15rem', fontFamily: 'var(--font-header)' }}>
             Portfolio: {data.personal?.fullName || 'Candidate'}
           </h3>
           <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>

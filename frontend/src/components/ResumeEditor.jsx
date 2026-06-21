@@ -8,6 +8,8 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
     title: 'My Professional Resume',
     template: 'slide',
     colorTheme: 'default',
+    fontSizeScale: 14,
+    spacingScale: 1.5,
     personal: {
       fullName: '',
       title: '',
@@ -33,6 +35,9 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
   
   // Accordion state
   const [expandedSection, setExpandedSection] = useState('metadata');
+  
+  // Input highlight tracking
+  const [activeHighlightField, setActiveHighlightField] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -141,7 +146,7 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
       
       {/* LEFT SIDEBAR: Form Editor */}
       <div className="no-print editor-sidebar" style={{ 
-        background: '#fff', 
+        background: 'var(--color-card-bg)', 
         borderRight: '1px solid var(--color-border)', 
         height: 'calc(100vh - 64px)', 
         overflowY: 'auto',
@@ -151,7 +156,7 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
         zIndex: 10
       }}>
         {/* Sidebar Header */}
-        <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(27, 67, 96, 0.02)' }}>
+        <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'transparent' }}>
           <button onClick={onBack} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}>
             <ArrowLeft size={16} /> Dashboard
           </button>
@@ -196,7 +201,7 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
             </div>
             
             {expandedSection === 'metadata' && (
-              <div style={{ padding: '1.25rem', background: '#fafbfc' }}>
+              <div style={{ padding: '1.25rem', background: 'var(--color-card-bg)' }}>
                 <div className="form-group">
                   <label className="form-label">Resume Title</label>
                   <input 
@@ -234,6 +239,38 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
                     <option value="indigo">Classic Indigo & Gold</option>
                   </select>
                 </div>
+
+                <div className="form-group">
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-primary)' }}>
+                    <span>Base Font Size:</span>
+                    <span style={{ fontWeight: 700 }}>{formData.fontSizeScale || 14}px</span>
+                  </label>
+                  <input 
+                    type="range" 
+                    min="11" 
+                    max="18" 
+                    step="1" 
+                    style={{ width: '100%', accentColor: 'var(--color-primary)', cursor: 'pointer' }}
+                    value={formData.fontSizeScale || 14} 
+                    onChange={(e) => setFormData({ ...formData, fontSizeScale: parseInt(e.target.value) })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-primary)' }}>
+                    <span>Section Spacing:</span>
+                    <span style={{ fontWeight: 700 }}>{formData.spacingScale || 1.5}rem</span>
+                  </label>
+                  <input 
+                    type="range" 
+                    min="0.8" 
+                    max="3.0" 
+                    step="0.1" 
+                    style={{ width: '100%', accentColor: 'var(--color-primary)', cursor: 'pointer' }}
+                    value={formData.spacingScale || 1.5} 
+                    onChange={(e) => setFormData({ ...formData, spacingScale: parseFloat(e.target.value) })}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -246,30 +283,74 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
             </div>
 
             {expandedSection === 'personal' && (
-              <div style={{ padding: '1.25rem', background: '#fafbfc' }}>
+              <div style={{ padding: '1.25rem', background: 'var(--color-card-bg)' }}>
                 <div className="form-group">
                   <label className="form-label">Full Name</label>
-                  <input type="text" className="form-input" value={formData.personal.fullName} onChange={(e) => handlePersonalChange('fullName', e.target.value)} />
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.fullName} 
+                    onChange={(e) => handlePersonalChange('fullName', e.target.value)} 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Professional Headline</label>
-                  <input type="text" className="form-input" value={formData.personal.title} onChange={(e) => handlePersonalChange('title', e.target.value)} placeholder="e.g. Senior Frontend Developer" />
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.title} 
+                    onChange={(e) => handlePersonalChange('title', e.target.value)} 
+                    placeholder="e.g. Senior Frontend Developer" 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Email</label>
-                  <input type="email" className="form-input" value={formData.personal.email} onChange={(e) => handlePersonalChange('email', e.target.value)} />
+                  <input 
+                    type="email" 
+                    className="form-input" 
+                    value={formData.personal.email} 
+                    onChange={(e) => handlePersonalChange('email', e.target.value)} 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Phone Number</label>
-                  <input type="text" className="form-input" value={formData.personal.phone} onChange={(e) => handlePersonalChange('phone', e.target.value)} />
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.phone} 
+                    onChange={(e) => handlePersonalChange('phone', e.target.value)} 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Location / City</label>
-                  <input type="text" className="form-input" value={formData.personal.location} onChange={(e) => handlePersonalChange('location', e.target.value)} placeholder="e.g. San Francisco, CA" />
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.location} 
+                    onChange={(e) => handlePersonalChange('location', e.target.value)} 
+                    placeholder="e.g. San Francisco, CA" 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Portfolio Website URL</label>
-                  <input type="text" className="form-input" value={formData.personal.website} onChange={(e) => handlePersonalChange('website', e.target.value)} />
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={formData.personal.website} 
+                    onChange={(e) => handlePersonalChange('website', e.target.value)} 
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Professional Summary</label>
@@ -279,6 +360,8 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
                     value={formData.personal.summary} 
                     onChange={(e) => handlePersonalChange('summary', e.target.value)}
                     placeholder="Brief intro about your qualifications and key achievements..."
+                    onFocus={() => setActiveHighlightField('personal')}
+                    onBlur={() => setActiveHighlightField(null)}
                   />
                 </div>
               </div>
@@ -293,34 +376,71 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
             </div>
 
             {expandedSection === 'experience' && (
-              <div style={{ padding: '1.25rem', background: '#fafbfc' }}>
+              <div style={{ padding: '1.25rem', background: 'var(--color-card-bg)' }}>
                 {formData.experience.map((exp, idx) => (
-                  <div key={idx} style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', background: '#fff', marginBottom: '1.25rem' }}>
+                  <div key={idx} style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)', marginBottom: '1.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                       <span style={{ fontWeight: 700, color: 'var(--color-secondary)' }}>Job #{idx + 1}</span>
                       <button onClick={() => removeArrayItem('experience', idx)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16} /></button>
                     </div>
                     <div className="form-group">
                       <label className="form-label">Job Role / Title</label>
-                      <input type="text" className="form-input" value={exp.role} onChange={(e) => updateArrayItem('experience', idx, 'role', e.target.value)} />
+                      <input 
+                        type="text" 
+                        className="form-input" 
+                        value={exp.role} 
+                        onChange={(e) => updateArrayItem('experience', idx, 'role', e.target.value)} 
+                        onFocus={() => setActiveHighlightField('experience-' + idx)}
+                        onBlur={() => setActiveHighlightField(null)}
+                      />
                     </div>
                     <div className="form-group">
                       <label className="form-label">Company Name</label>
-                      <input type="text" className="form-input" value={exp.company} onChange={(e) => updateArrayItem('experience', idx, 'company', e.target.value)} />
+                      <input 
+                        type="text" 
+                        className="form-input" 
+                        value={exp.company} 
+                        onChange={(e) => updateArrayItem('experience', idx, 'company', e.target.value)} 
+                        onFocus={() => setActiveHighlightField('experience-' + idx)}
+                        onBlur={() => setActiveHighlightField(null)}
+                      />
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       <div className="form-group">
                         <label className="form-label">Start Date</label>
-                        <input type="text" className="form-input" placeholder="e.g. Jan 2022" value={exp.startDate} onChange={(e) => updateArrayItem('experience', idx, 'startDate', e.target.value)} />
+                        <input 
+                          type="text" 
+                          className="form-input" 
+                          placeholder="e.g. Jan 2022" 
+                          value={exp.startDate} 
+                          onChange={(e) => updateArrayItem('experience', idx, 'startDate', e.target.value)} 
+                          onFocus={() => setActiveHighlightField('experience-' + idx)}
+                          onBlur={() => setActiveHighlightField(null)}
+                        />
                       </div>
                       <div className="form-group">
                         <label className="form-label">End Date</label>
-                        <input type="text" className="form-input" placeholder="e.g. Present" value={exp.endDate} onChange={(e) => updateArrayItem('experience', idx, 'endDate', e.target.value)} />
+                        <input 
+                          type="text" 
+                          className="form-input" 
+                          placeholder="e.g. Present" 
+                          value={exp.endDate} 
+                          onChange={(e) => updateArrayItem('experience', idx, 'endDate', e.target.value)} 
+                          onFocus={() => setActiveHighlightField('experience-' + idx)}
+                          onBlur={() => setActiveHighlightField(null)}
+                        />
                       </div>
                     </div>
                     <div className="form-group">
                       <label className="form-label">Job Description</label>
-                      <textarea className="form-input" rows={3} value={exp.description} onChange={(e) => updateArrayItem('experience', idx, 'description', e.target.value)} />
+                      <textarea 
+                        className="form-input" 
+                        rows={3} 
+                        value={exp.description} 
+                        onChange={(e) => updateArrayItem('experience', idx, 'description', e.target.value)} 
+                        onFocus={() => setActiveHighlightField('experience-' + idx)}
+                        onBlur={() => setActiveHighlightField(null)}
+                      />
                     </div>
                   </div>
                 ))}
@@ -607,7 +727,7 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center',
-        background: '#f1f5f9',
+        background: 'var(--color-bg)',
         position: 'relative'
       }}>
         {/* Float action banner */}
@@ -618,7 +738,7 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
           justifyContent: 'space-between', 
           alignItems: 'center',
           marginBottom: '1rem',
-          background: '#fff',
+          background: 'var(--color-card-bg)',
           padding: '0.75rem 1.25rem',
           borderRadius: 'var(--radius-md)',
           boxShadow: 'var(--shadow-sm)',
@@ -635,7 +755,7 @@ export default function ResumeEditor({ id, onBack, API_BASE }) {
 
         {/* The dynamic preview rendering */}
         <div style={{ width: '100%', maxWidth: '800px', flex: 1 }}>
-          <ResumePreview data={formData} activeSlide={0} isInteractive={false} />
+          <ResumePreview data={formData} activeHighlightField={activeHighlightField} activeSlide={0} isInteractive={false} />
         </div>
       </div>
     </div>

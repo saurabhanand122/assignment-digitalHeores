@@ -327,3 +327,98 @@ button, input, textarea, select {
     content: none !important;
   }
 }
+
+/* --- PREMIUM DASHBOARD ANIMATIONS & UTILITIES --- */
+
+/* Floating background blobs */
+@keyframes drift-blob-1 {
+  0% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+  33% { transform: translate(30px, -50px) rotate(120deg) scale(1.1); }
+  66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.9); }
+  100% { transform: translate(0px, 0px) rotate(360deg) scale(1); }
+}
+
+@keyframes drift-blob-2 {
+  0% { transform: translate(0px, 0px) rotate(360deg) scale(1); }
+  33% { transform: translate(-40px, 40px) rotate(240deg) scale(0.85); }
+  66% { transform: translate(25px, -30px) rotate(120deg) scale(1.05); }
+  100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+}
+
+.animate-blob-1 {
+  animation: drift-blob-1 25s infinite alternate ease-in-out;
+}
+
+.animate-blob-2 {
+  animation: drift-blob-2 20s infinite alternate ease-in-out;
+}
+
+/* Glassmorphism panel card */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Entry transitions */
+.animate-slide-up {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Glowing pulse indicator for live database */
+.pulse-green {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(129, 178, 154, 0.7);
+  animation: pulse-g 1.8s infinite;
+}
+
+@keyframes pulse-g {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(129, 178, 154, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(129, 178, 154, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(129, 178, 154, 0);
+  }
+}
+
+/* Gentle pulse for empty state call to action */
+.btn-pulse {
+  animation: pulse-btn 2.5s infinite;
+}
+
+@keyframes pulse-btn {
+  0% {
+    box-shadow: 0 0 0 0 rgba(224, 122, 95, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(224, 122, 95, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 122, 95, 0);
+  }
+}

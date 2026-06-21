@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Edit2, Share2, Trash2, Award, Briefcase, GraduationCap, Link2, Mail, Phone, MapPin, Eye, Search } from 'lucide-react';
+import { Plus, Edit2, Share2, Trash2, Mail, MapPin, Eye, Search, Database, Layers, Sparkles, FolderOpen, ArrowRight } from 'lucide-react';
 
 export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [copiedId, setCopiedId] = useState(null);
 
   useEffect(() => {
     fetchResumes();
@@ -20,7 +21,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
       setError(null);
     } catch (err) {
       console.error('Error fetching resumes:', err);
-      setError('Could not fetch resumes. Please check if backend is running.');
+      setError('Could not connect to backend server. Make sure MongoDB & the backend port are active.');
     } finally {
       setLoading(false);
     }
@@ -38,162 +39,295 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
     }
   };
 
+  const handleShareClick = (id, e) => {
+    e.stopPropagation();
+    onShare(id);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   const filteredResumes = resumes.filter(r => 
     r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (r.personal?.fullName || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="animate-fade-in" style={{ padding: '2rem 1.5rem', position: 'relative' }}>
-      {/* Background blobs */}
-      <div className="blob-decor blob-primary" style={{ top: '5%', left: '10%' }}></div>
-      <div className="blob-decor blob-secondary" style={{ bottom: '10%', right: '5%' }}></div>
+    <div className="animate-fade-in" style={{ padding: '3rem 2rem', position: 'relative', minHeight: '100vh', background: 'linear-gradient(135deg, #f4f1de 0%, #fbfaf5 100%)', overflow: 'hidden' }}>
+      
+      {/* Animated Floating Background Blobs */}
+      <div className="blob-decor blob-primary animate-blob-1" style={{ top: '10%', left: '-5%', width: '400px', height: '400px', opacity: 0.12 }}></div>
+      <div className="blob-decor blob-secondary animate-blob-2" style={{ bottom: '15%', right: '-5%', width: '350px', height: '350px', opacity: 0.1 }}></div>
+      <div className="blob-decor blob-accent animate-blob-1" style={{ top: '60%', left: '40%', width: '250px', height: '250px', opacity: 0.08 }}></div>
 
-      {/* Main Header Card */}
-      <div style={{
-        background: 'rgba(27, 67, 96, 0.04)',
+      {/* Glassmorphic Hero Banner */}
+      <div className="glass-panel animate-slide-up" style={{
         borderRadius: 'var(--radius-lg)',
-        padding: '2.5rem',
-        marginBottom: '2.5rem',
-        border: '1px solid rgba(27, 67, 96, 0.08)',
+        padding: '3rem 2rem',
+        marginBottom: '3rem',
         textAlign: 'center',
         position: 'relative',
-        overflow: 'hidden'
+        boxShadow: '0 10px 30px rgba(27, 67, 96, 0.05)'
       }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(224, 122, 95, 0.1)', padding: '0.4rem 1rem', borderRadius: 'var(--radius-full)', color: 'var(--color-secondary)', fontSize: '0.85rem', fontWeight: 700, marginBottom: '1.25rem', border: '1px solid rgba(224, 122, 95, 0.2)' }}>
+          <Sparkles size={14} /> Design Showcase Platform
+        </div>
+        
         <h1 style={{ 
-          fontSize: '2.75rem', 
-          color: 'var(--color-primary)', 
+          fontSize: '3rem', 
           fontFamily: 'var(--font-serif)',
-          marginBottom: '0.75rem' 
+          lineHeight: 1.15,
+          marginBottom: '1rem',
+          background: 'linear-gradient(to right, var(--color-primary) 30%, var(--color-secondary) 80%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
         }}>
           Creative Resume Builder & Showcase
         </h1>
-        <p style={{ fontSize: '1.1rem', color: 'var(--color-text-dark)', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
-          Build, customize, and share visually stunning, responsive resumes and portfolios inspired by premium design aesthetics.
+        
+        <p style={{ fontSize: '1.15rem', color: 'var(--color-text-dark)', maxWidth: '650px', margin: '0 auto 2rem', opacity: 0.85, lineHeight: 1.6 }}>
+          Build, customize, and share visually stunning, responsive A4 resumes inspired by premium presentation designs.
         </p>
 
-        {/* Developer Contact Info (Mandatory Requirement) */}
+        {/* Developer Contact Card (Mandatory Requirement) */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'center', 
           gap: '1.5rem', 
           flexWrap: 'wrap',
-          background: 'rgba(255, 255, 255, 0.7)',
-          padding: '0.75rem 1.5rem',
+          background: 'rgba(255, 255, 255, 0.8)',
+          padding: '0.85rem 2rem',
           borderRadius: 'var(--radius-full)',
           width: 'fit-content',
           margin: '0 auto',
-          border: '1px solid var(--color-border)'
-        }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, color: 'var(--color-primary)' }}>
+          boxShadow: 'var(--shadow-sm)',
+          border: '1px solid var(--color-border)',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.borderColor = 'var(--color-primary)';
+          e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.borderColor = 'var(--color-border)';
+          e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+        }}
+        >
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: 'var(--color-primary)' }}>
             <strong>Developer:</strong> Saurabh Anand
           </span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-dark)' }}>
-            <Mail size={16} /> saurabh.anand122@gmail.com
+            <Mail size={16} style={{ color: 'var(--color-secondary)' }} /> saurabh.anand122@gmail.com
           </span>
         </div>
       </div>
 
-      {/* Dashboard Stats */}
+      {/* Grid Statistics Section */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: '1.5rem',
-        marginBottom: '2.5rem'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+        gap: '2rem',
+        marginBottom: '3.5rem'
       }}>
-        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--color-border)' }}>
-          <h3 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>Total Resumes</h3>
-          <p style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--color-primary)' }}>{resumes.length}</p>
+        {/* Card 1: Total Resumes */}
+        <div className="glass-panel" style={{ 
+          padding: '1.75rem', 
+          borderRadius: 'var(--radius-md)', 
+          borderLeft: '5px solid var(--color-secondary)',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.transform = 'translateY(-4px)';
+          e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = 'none';
+        }}
+        >
+          <div>
+            <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>Total Resumes</h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--color-primary)', lineHeight: 1 }}>{resumes.length}</p>
+          </div>
+          <FolderOpen size={40} style={{ opacity: 0.15, color: 'var(--color-primary)' }} />
         </div>
-        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--color-border)' }}>
-          <h3 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>Active Templates</h3>
-          <p style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--color-secondary)' }}>3 Themes</p>
+
+        {/* Card 2: Active Templates */}
+        <div className="glass-panel" style={{ 
+          padding: '1.75rem', 
+          borderRadius: 'var(--radius-md)', 
+          borderLeft: '5px solid var(--color-primary)',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.transform = 'translateY(-4px)';
+          e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = 'none';
+        }}
+        >
+          <div>
+            <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>Layout Options</h3>
+            <p style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--color-primary)', lineHeight: 1.2 }}>3 A4 Themes</p>
+          </div>
+          <Layers size={40} style={{ opacity: 0.15, color: 'var(--color-primary)' }} />
         </div>
-        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--color-border)' }}>
-          <h3 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>Database</h3>
-          <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-success)', marginTop: '0.5rem' }}>MERN connected</p>
+
+        {/* Card 3: Database status */}
+        <div className="glass-panel" style={{ 
+          padding: '1.75rem', 
+          borderRadius: 'var(--radius-md)', 
+          borderLeft: '5px solid var(--color-success)',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.transform = 'translateY(-4px)';
+          e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = 'none';
+        }}
+        >
+          <div>
+            <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>DB Sync</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+              <span className="pulse-green"></span>
+              <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-success)' }}>MERN Connection Live</p>
+            </div>
+          </div>
+          <Database size={40} style={{ opacity: 0.15, color: 'var(--color-success)' }} />
         </div>
       </div>
 
-      {/* Main Controls & Search */}
+      {/* Main Controls Section */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        gap: '1rem', 
-        marginBottom: '1.5rem',
+        gap: '1.5rem', 
+        marginBottom: '2rem',
         flexWrap: 'wrap'
       }}>
-        <div style={{ position: 'relative', width: '320px' }}>
+        {/* Search */}
+        <div style={{ position: 'relative', width: '350px' }}>
           <input 
             type="text" 
-            placeholder="Search resumes..." 
+            placeholder="Search resumes by title or candidate..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
               width: '100%',
-              padding: '0.625rem 1rem 0.625rem 2.25rem',
+              padding: '0.75rem 1rem 0.75rem 2.5rem',
               border: '1px solid var(--color-border)',
               borderRadius: 'var(--radius-md)',
               outline: 'none',
-              background: '#fff'
+              background: '#fff',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.3s ease'
+            }}
+            onFocus={e => {
+              e.target.style.borderColor = 'var(--color-primary)';
+              e.target.style.boxShadow = '0 0 0 3px rgba(27,67,96,0.1)';
+            }}
+            onBlur={e => {
+              e.target.style.borderColor = 'var(--color-border)';
+              e.target.style.boxShadow = 'var(--shadow-sm)';
             }}
           />
-          <Search size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
+          <Search size={18} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
         </div>
 
-        <button onClick={onCreateNew} className="btn btn-primary" style={{ padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)' }}>
+        {/* Action Button */}
+        <button 
+          onClick={onCreateNew} 
+          className="btn btn-primary" 
+          style={{ 
+            padding: '0.85rem 2rem', 
+            borderRadius: 'var(--radius-md)',
+            background: 'linear-gradient(to right, var(--color-primary), #123048)',
+            boxShadow: 'var(--shadow-md)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.transform = 'scale(1.03)';
+            e.currentTarget.style.boxShadow = '0 6px 15px rgba(27, 67, 96, 0.25)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+          }}
+        >
           <Plus size={18} /> Create New Resume
         </button>
       </div>
 
-      {/* Resumes Grid */}
+      {/* Resumes Grid/Layout List */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+        <div style={{ textAlign: 'center', padding: '6rem 0' }}>
           <div style={{ 
             display: 'inline-block', 
-            width: '40px', 
-            height: '40px', 
-            border: '4px solid rgba(27, 67, 96, 0.1)', 
+            width: '45px', 
+            height: '45px', 
+            border: '4px solid rgba(27, 67, 96, 0.08)', 
             borderTopColor: 'var(--color-primary)', 
             borderRadius: '50%',
             animation: 'spin 1s linear infinite'
           }}></div>
-          <p style={{ marginTop: '1rem', color: 'var(--color-text-muted)' }}>Loading saved resumes...</p>
+          <p style={{ marginTop: '1.25rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>Fetching resumes from database...</p>
         </div>
       ) : error ? (
         <div style={{ 
-          background: 'rgba(239, 68, 68, 0.05)', 
-          border: '1px solid rgba(239, 68, 68, 0.2)', 
-          padding: '1.5rem', 
+          background: 'rgba(239, 68, 68, 0.04)', 
+          border: '1px solid rgba(239, 68, 68, 0.15)', 
+          padding: '2rem', 
           borderRadius: 'var(--radius-md)', 
-          color: '#b91c1c', 
+          color: '#c53030', 
           textAlign: 'center', 
-          margin: '2rem 0' 
+          margin: '2rem 0',
+          boxShadow: 'var(--shadow-sm)'
         }}>
-          <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>{error}</p>
-          <button onClick={fetchResumes} className="btn btn-outline" style={{ border: '1px solid #b91c1c', color: '#b91c1c', padding: '0.5rem 1rem' }}>
-            Try Again
+          <p style={{ fontWeight: 700, marginBottom: '0.75rem', fontSize: '1.1rem' }}>{error}</p>
+          <button onClick={fetchResumes} className="btn btn-outline" style={{ border: '1px solid #c53030', color: '#c53030', padding: '0.5rem 1.5rem', borderRadius: 'var(--radius-sm)' }}>
+            Reconnect Server
           </button>
         </div>
       ) : filteredResumes.length === 0 ? (
-        <div style={{ 
-          background: '#fff', 
-          border: '1px solid var(--color-border)', 
-          borderRadius: 'var(--radius-md)', 
-          padding: '4rem 2rem', 
+        /* Empty State Layout (Beautiful Dotted Panel) */
+        <div className="glass-panel animate-slide-up" style={{ 
+          border: '2px dashed rgba(27, 67, 96, 0.2)', 
+          borderRadius: 'var(--radius-lg)', 
+          padding: '5rem 2rem', 
           textAlign: 'center', 
-          color: 'var(--color-text-muted)' 
+          color: 'var(--color-text-dark)',
+          maxWidth: '750px',
+          margin: '0 auto',
+          boxShadow: 'var(--shadow-sm)'
         }}>
-          <p style={{ fontSize: '1.2rem', marginBottom: '1.5rem' }}>No resumes found. Let's create your first one!</p>
-          <button onClick={onCreateNew} className="btn btn-secondary">
-            <Plus size={18} /> Create First Resume
+          <FolderOpen size={64} style={{ color: 'var(--color-primary)', opacity: 0.5, marginBottom: '1.5rem' }} />
+          <h2 style={{ fontSize: '1.75rem', fontFamily: 'var(--font-serif)', color: 'var(--color-primary)', marginBottom: '0.75rem' }}>No resumes found</h2>
+          <p style={{ color: 'var(--color-text-muted)', maxWidth: '400px', margin: '0 auto 2rem', fontSize: '0.95rem' }}>
+            It looks like you haven't created any resumes yet. Start building a professional document now.
+          </p>
+          <button onClick={onCreateNew} className="btn btn-secondary btn-pulse" style={{ padding: '0.85rem 2.25rem', borderRadius: 'var(--radius-md)', fontSize: '1rem' }}>
+            <Plus size={18} /> Create Your First Resume
           </button>
         </div>
       ) : (
+        /* Populated Resumes Grid */
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: '2.5rem'
         }}>
           {filteredResumes.map((resume) => (
@@ -205,18 +339,18 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
                 borderRadius: 'var(--radius-md)',
                 boxShadow: 'var(--shadow-md)',
                 border: '1px solid var(--color-border)',
-                padding: '1.75rem',
+                padding: '2rem',
                 cursor: 'pointer',
-                transition: 'all var(--transition-normal)',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                height: '240px'
+                height: '250px'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                e.currentTarget.style.transform = 'translateY(-6px)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(27,67,96,0.1)';
                 e.currentTarget.style.borderColor = 'var(--color-primary)';
               }}
               onMouseLeave={(e) => {
@@ -227,23 +361,26 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
             >
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <h3 style={{ fontSize: '1.25rem', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)' }}>{resume.title}</h3>
+                  <h3 style={{ fontSize: '1.25rem', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', fontWeight: 700 }}>{resume.title}</h3>
                   <span style={{ 
-                    fontSize: '0.75rem', 
-                    padding: '0.25rem 0.5rem', 
+                    fontSize: '0.7rem', 
+                    padding: '0.25rem 0.6rem', 
                     borderRadius: 'var(--radius-full)', 
-                    background: resume.template === 'slide' ? 'var(--color-accent)' : 'var(--color-success)',
-                    color: '#000',
-                    fontWeight: 600
+                    background: resume.template === 'slide' ? 'rgba(27,67,96,0.08)' : 'rgba(129, 178, 154, 0.12)',
+                    color: resume.template === 'slide' ? 'var(--color-primary)' : 'var(--color-success)',
+                    fontWeight: 700,
+                    border: resume.template === 'slide' ? '1px solid rgba(27,67,96,0.15)' : '1px solid rgba(129,178,154,0.25)'
                   }}>
-                    {resume.template === 'slide' ? 'Slide Theme' : resume.template === 'modern' ? 'Modern' : 'Minimal'}
+                    {resume.template === 'slide' ? 'Creative A4' : resume.template === 'modern' ? 'Modern' : 'Minimal'}
                   </span>
                 </div>
-                <p style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--color-text-dark)', marginBottom: '0.5rem' }}>
-                  {resume.personal?.fullName || 'Anonymous Candidate'}
+                
+                <p style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-secondary)', marginBottom: '0.5rem' }}>
+                  {resume.personal?.fullName || 'Untitled Candidate'}
                 </p>
-                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {resume.personal?.summary || 'No summary written yet.'}
+                
+                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>
+                  {resume.personal?.summary || 'No summary description written yet.'}
                 </p>
               </div>
 
@@ -256,22 +393,43 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
                 marginTop: '1rem'
               }}>
                 <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                  Edited {new Date(resume.updatedAt).toLocaleDateString()}
+                  Updated {new Date(resume.updatedAt).toLocaleDateString()}
                 </span>
+                
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button 
-                    onClick={(e) => { e.stopPropagation(); onShare(resume._id); }} 
-                    style={{ background: 'rgba(224, 122, 95, 0.1)', color: 'var(--color-secondary)', border: 'none', padding: '0.375rem', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}
-                    title="Public Share Link"
+                    onClick={(e) => handleShareClick(resume._id, e)} 
+                    style={{ 
+                      background: copiedId === resume._id ? 'var(--color-success)' : 'rgba(224, 122, 95, 0.1)', 
+                      color: copiedId === resume._id ? '#fff' : 'var(--color-secondary)', 
+                      border: 'none', 
+                      padding: '0.5rem', 
+                      borderRadius: 'var(--radius-sm)', 
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      transition: 'all 0.2s ease'
+                    }}
+                    title={copiedId === resume._id ? 'Copied!' : 'Copy Share Link'}
                   >
-                    <Share2 size={16} />
+                    <Share2 size={15} />
                   </button>
                   <button 
                     onClick={(e) => handleDelete(resume._id, e)} 
-                    style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '0.375rem', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}
+                    style={{ 
+                      background: 'rgba(239, 68, 68, 0.08)', 
+                      color: '#ef4444', 
+                      border: 'none', 
+                      padding: '0.5rem', 
+                      borderRadius: 'var(--radius-sm)', 
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      transition: 'all 0.2s ease'
+                    }}
                     title="Delete Resume"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={15} />
                   </button>
                 </div>
               </div>
@@ -281,7 +439,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
       )}
 
       {/* Mandatory Button: Built for Digital Heroes */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5rem' }}>
         <a 
           href="https://digitalheroesco.com" 
           target="_blank" 
@@ -290,33 +448,33 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE }) {
           style={{
             background: 'var(--color-primary)',
             color: '#ffffff',
-            padding: '0.875rem 2rem',
+            padding: '1rem 2.5rem',
             borderRadius: 'var(--radius-full)',
             fontFamily: 'var(--font-serif)',
             fontWeight: 700,
-            fontSize: '1.1rem',
+            fontSize: '1.15rem',
             boxShadow: 'var(--shadow-md)',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            transition: 'all var(--transition-normal)'
+            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = 'var(--color-secondary)';
-            e.currentTarget.style.transform = 'scale(1.05)';
-            e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+            e.currentTarget.style.transform = 'translateY(-3px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(224, 122, 95, 0.3)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'var(--color-primary)';
-            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.transform = 'translateY(0)';
             e.currentTarget.style.boxShadow = 'var(--shadow-md)';
           }}
         >
-          Built for Digital Heroes
+          Built for Digital Heroes <ArrowRight size={18} />
         </a>
       </div>
 
-      {/* CSS Keyframes inline */}
+      {/* CSS Spin Keyframe inline */}
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }

@@ -361,7 +361,9 @@ body[data-site-theme="dark"] .form-input {
 
 /* Print Layout Optimization */
 @media print {
-  body {
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
     background-color: #ffffff !important;
     color: #000000 !important;
   }
@@ -384,11 +386,16 @@ body[data-site-theme="dark"] .form-input {
 
   .app-container {
     min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   /* Force preview pane to fill page */
   .preview-pane-container {
     width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
@@ -398,10 +405,14 @@ body[data-site-theme="dark"] .form-input {
   .resume-a4-page {
     width: 100% !important;
     height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
+    border: none !important;
     background-color: #ffffff !important;
     page-break-after: avoid !important;
     page-break-inside: avoid !important;

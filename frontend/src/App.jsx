@@ -252,7 +252,7 @@ export default function App() {
           }}>
             <Sparkles size={16} style={{ color: 'var(--color-secondary)' }} />
             <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)' }}>
-              Secure Authentication Enabled
+              Gemini AI-Powered Resume Platform
             </span>
           </div>
 
@@ -270,12 +270,12 @@ export default function App() {
           <p style={{
             fontSize: '1.2rem',
             color: 'var(--color-text-dark)',
-            maxWidth: '580px',
+            maxWidth: '620px',
             margin: '0 auto 2.5rem auto',
             lineHeight: 1.5,
             fontFamily: 'var(--font-body)'
           }}>
-            Create, manage, and duplicate high-impact, theme-aware resumes and host them as responsive web portfolios.
+            Build, edit, and share visually stunning, theme-aware A4 resumes. Powered by Google Gemini 2.5 Flash to generate professional resumes from scratch and extract data from PDF uploads.
           </p>
 
           {/* Action Call */}
@@ -301,7 +301,7 @@ export default function App() {
           {/* Visual Grid of Core Features */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
             gap: '1.5rem',
             textAlign: 'left'
           }}>
@@ -315,18 +315,26 @@ export default function App() {
 
             <div className="glass-panel" style={{ padding: '1.5rem', background: 'rgba(27, 67, 96, 0.02)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(27, 67, 96, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                <CheckCircle size={16} style={{ color: 'var(--color-secondary)' }} />
+                <Sparkles size={16} style={{ color: 'var(--color-secondary)' }} />
               </div>
-              <h3 style={{ fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.5rem', color: 'var(--color-primary)', fontFamily: 'var(--font-header)' }}>Completeness Score</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.4 }}>Evaluate your content strength dynamically with recommendations and completeness gauges.</p>
+              <h3 style={{ fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.5rem', color: 'var(--color-primary)', fontFamily: 'var(--font-header)' }}>AI Resume Generator</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.4 }}>Draft full professional resumes including summaries, experiences, and projects from a simple job title prompt.</p>
             </div>
 
             <div className="glass-panel" style={{ padding: '1.5rem', background: 'rgba(27, 67, 96, 0.02)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(27, 67, 96, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                 <Sparkles size={16} style={{ color: 'var(--color-secondary)' }} />
               </div>
-              <h3 style={{ fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.5rem', color: 'var(--color-primary)', fontFamily: 'var(--font-header)' }}>AI Bullet Enhancer</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.4 }}>Simulate advanced summary and action-verb improvements on your job roles instantly.</p>
+              <h3 style={{ fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.5rem', color: 'var(--color-primary)', fontFamily: 'var(--font-header)' }}>AI Resume Importer</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.4 }}>Upload existing PDF/TXT resume documents to automatically parse and extract key contact info and skills.</p>
+            </div>
+
+            <div className="glass-panel" style={{ padding: '1.5rem', background: 'rgba(27, 67, 96, 0.02)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(27, 67, 96, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                <CheckCircle size={16} style={{ color: 'var(--color-secondary)' }} />
+              </div>
+              <h3 style={{ fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.5rem', color: 'var(--color-primary)', fontFamily: 'var(--font-header)' }}>Completeness Gauge</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.4 }}>Evaluate your content strength dynamically with recommendations and completeness score gauges.</p>
             </div>
           </div>
         </div>

@@ -361,6 +361,11 @@ body[data-site-theme="dark"] .form-input {
 
 /* Print Layout Optimization */
 @media print {
+  @page {
+    size: A4;
+    margin: 0 !important;
+  }
+
   /* HIDE ALL SCROLLBARS */
   * {
     scrollbar-width: none !important;

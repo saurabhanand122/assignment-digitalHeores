@@ -160,7 +160,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
             <h2 style={{ fontSize: '1.25em', color: 'var(--color-primary)', fontFamily: 'var(--font-serif)', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.35em', marginBottom: '1em', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Key Projects
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25em' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: projects.length === 1 ? '1fr' : '1fr 1fr', gap: '1.25em' }}>
               {projects.map((proj, idx) => (
                 <div key={idx} style={{ border: '1px solid #e2e8f0', borderRadius: 'var(--radius-sm)', padding: '1rem', background: '#fafbfc' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25em' }}>

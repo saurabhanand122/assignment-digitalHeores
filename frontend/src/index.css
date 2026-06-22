@@ -407,6 +407,19 @@ body[data-site-theme="dark"] .form-input {
     overflow: hidden !important;
   }
 
+  .editor-layout-grid {
+    display: block !important;
+    grid-template-columns: none !important;
+    min-height: auto !important;
+  }
+
+  .preview-wrapper {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   /* Force preview pane to fill page */
   .preview-pane-container {
     width: 100% !important;

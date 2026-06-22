@@ -342,7 +342,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
   }
 
   return (
-    <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '450px 1fr', minHeight: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+    <div className="editor-layout-grid animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '450px 1fr', minHeight: 'calc(100vh - 64px)', overflow: 'hidden' }}>
       
       {/* LEFT SIDEBAR: Form Editor */}
       <div className="no-print editor-sidebar" style={{ 
@@ -1329,7 +1329,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
         </div>
 
         {/* The dynamic preview rendering */}
-        <div style={{ width: '100%', maxWidth: '800px', flex: 1 }}>
+        <div className="preview-wrapper" style={{ width: '100%', maxWidth: '800px', flex: 1 }}>
           <ResumePreview data={formData} activeHighlightField={activeHighlightField} activeSlide={0} isInteractive={false} />
         </div>
       </div>

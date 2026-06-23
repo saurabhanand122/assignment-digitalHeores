@@ -83,7 +83,7 @@ export default function AIChatbot({ API_BASE }) {
   };
 
   return (
-    <div className="no-print" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 1000 }}>
+    <div className="no-print ai-chatbot-wrapper">
       {/* Floating Toggle Button */}
       {!isOpen && (
         <button
@@ -129,9 +129,7 @@ export default function AIChatbot({ API_BASE }) {
 
       {/* Chat Drawer/Panel */}
       {isOpen && (
-        <div className="glass-panel animate-slide-up" style={{
-          width: '380px',
-          height: '520px',
+        <div className="glass-panel animate-slide-up ai-chatbot-drawer" style={{
           background: 'var(--color-card-bg)',
           border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-lg)',

@@ -47,6 +47,18 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
   const [genCompany, setGenCompany] = useState('');
   const [genBackground, setGenBackground] = useState('');
 
+  // Mobile layout responsiveness states
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [activeTab, setActiveTab] = useState('edit'); // 'edit' or 'preview'
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     if (id) {
       fetchResumeDetails();
@@ -342,19 +354,73 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
   }
 
   return (
-    <div className="editor-layout-grid animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '450px 1fr', minHeight: 'calc(100vh - 64px)', overflow: 'hidden' }}>
-      
-      {/* LEFT SIDEBAR: Form Editor */}
-      <div className="no-print editor-sidebar" style={{ 
-        background: 'var(--color-card-bg)', 
-        borderRight: '1px solid var(--color-border)', 
-        height: 'calc(100vh - 64px)', 
-        overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        boxShadow: 'var(--shadow-sm)',
-        zIndex: 10
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+      {/* Mobile Sticky Tab Selector */}
+      {isMobile && (
+        <div className="no-print" style={{ 
+          display: 'flex', 
+          background: 'var(--color-card-bg)', 
+          borderBottom: '1px solid var(--color-border)',
+          padding: '0.5rem',
+          gap: '0.5rem',
+          position: 'sticky',
+          top: 0,
+          zIndex: 40
+        }}>
+          <button 
+            onClick={() => setActiveTab('edit')}
+            className="btn"
+            style={{ 
+              flex: 1, 
+              padding: '0.6rem 0.5rem', 
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              background: activeTab === 'edit' ? 'var(--color-primary)' : 'transparent',
+              color: activeTab === 'edit' ? '#fff' : 'var(--color-text-dark)',
+              border: activeTab === 'edit' ? 'none' : '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-sm)'
+            }}
+          >
+            Edit Form
+          </button>
+          <button 
+            onClick={() => setActiveTab('preview')}
+            className="btn"
+            style={{ 
+              flex: 1, 
+              padding: '0.6rem 0.5rem', 
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              background: activeTab === 'preview' ? 'var(--color-primary)' : 'transparent',
+              color: activeTab === 'preview' ? '#fff' : 'var(--color-text-dark)',
+              border: activeTab === 'preview' ? 'none' : '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-sm)'
+            }}
+          >
+            Live Preview
+          </button>
+        </div>
+      )}
+
+      <div className="editor-layout-grid animate-fade-in" style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : '450px 1fr', 
+        minHeight: isMobile ? 'calc(100vh - 114px)' : 'calc(100vh - 64px)',
+        height: isMobile ? 'calc(100vh - 114px)' : 'calc(100vh - 64px)',
+        overflow: 'hidden' 
       }}>
+        
+        {/* LEFT SIDEBAR: Form Editor */}
+        <div className="no-print editor-sidebar" style={{ 
+          background: 'var(--color-card-bg)', 
+          borderRight: '1px solid var(--color-border)', 
+          height: '100%', 
+          overflowY: 'auto',
+          display: (!isMobile || activeTab === 'edit') ? 'flex' : 'none',
+          flexDirection: 'column',
+          boxShadow: 'var(--shadow-sm)',
+          zIndex: 10
+        }}>
         {/* Sidebar Header */}
         <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'transparent' }}>
           <button onClick={onBack} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}>
@@ -1296,14 +1362,15 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
 
       {/* RIGHT PREVIEW PANE: Live Rendering */}
       <div className="preview-pane-container" style={{ 
-        height: 'calc(100vh - 64px)', 
+        height: '100%', 
         overflowY: 'auto', 
-        padding: '2rem', 
-        display: 'flex', 
+        padding: isMobile ? '1rem' : '2rem', 
+        display: (!isMobile || activeTab === 'preview') ? 'flex' : 'none', 
         flexDirection: 'column', 
         alignItems: 'center',
         background: 'var(--color-bg)',
-        position: 'relative'
+        position: 'relative',
+        width: '100%'
       }}>
         {/* Float action banner */}
         <div className="no-print" style={{ 
@@ -1319,13 +1386,31 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           boxShadow: 'var(--shadow-sm)',
           border: '1px solid var(--color-border)'
         }}>
-          <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-primary)' }}>
-            {formData.template === 'slide' ? 'Creative A4 Document Layout' : formData.template === 'modern' ? 'Modern Professional Two-Column' : 'Minimalist Classic Serif'}
-          </span>
+          {isMobile ? (
+            <button onClick={onBack} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600, fontSize: '0.85rem' }}>
+              <ArrowLeft size={14} /> Dashboard
+            </button>
+          ) : (
+            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-primary)' }}>
+              {formData.template === 'slide' ? 'Creative A4 Document Layout' : formData.template === 'modern' ? 'Modern Professional Two-Column' : 'Minimalist Classic Serif'}
+            </span>
+          )}
 
-          <button onClick={triggerPrint} className="btn btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: 'var(--radius-sm)' }}>
-            <Printer size={14} /> Print PDF
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {isMobile && (
+              <button 
+                onClick={handleSave} 
+                disabled={saving}
+                className="btn btn-primary" 
+                style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: 'var(--radius-sm)' }}
+              >
+                <Save size={14} /> {saving ? 'Saving...' : 'Save'}
+              </button>
+            )}
+            <button onClick={triggerPrint} className="btn btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: 'var(--radius-sm)' }}>
+              <Printer size={14} /> Print PDF
+            </button>
+          </div>
         </div>
 
         {/* The dynamic preview rendering */}
@@ -1334,5 +1419,6 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
         </div>
       </div>
     </div>
+  </div>
   );
 }

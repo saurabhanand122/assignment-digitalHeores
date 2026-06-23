@@ -225,12 +225,11 @@ export default function App() {
         }} />
 
         {/* Brand Header */}
-        <div className="glass-panel" style={{
+        <div className="glass-panel login-card" style={{
           position: 'relative',
           zIndex: 10,
           width: '100%',
           maxWidth: '800px',
-          padding: '4rem 2.5rem',
           borderRadius: 'var(--radius-lg)',
           background: 'var(--color-card-bg)',
           border: '1px solid var(--color-border)',
@@ -257,8 +256,7 @@ export default function App() {
           </div>
 
           {/* Headline */}
-          <h1 className="serif" style={{
-            fontSize: '3.25rem',
+          <h1 className="serif login-title" style={{
             fontWeight: 800,
             lineHeight: 1.1,
             color: 'var(--color-primary)',
@@ -354,11 +352,10 @@ export default function App() {
       </svg>
 
       {/* Global Sticky Navigation Bar (no-print) */}
-      <nav className="no-print glass-panel" style={{
+      <nav className="no-print glass-panel app-navbar" style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '0.85rem 2rem',
         borderBottom: '1px solid var(--color-border)',
         background: 'var(--color-card-bg)',
         backdropFilter: 'blur(10px)',
@@ -398,7 +395,8 @@ export default function App() {
             border: '1px solid var(--color-border)' 
           }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-dark)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-              <Palette size={13} style={{ color: 'var(--color-secondary)' }} /> Theme:
+              <Palette size={13} style={{ color: 'var(--color-secondary)' }} />
+              <span className="hide-on-mobile">Theme:</span>
             </span>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               <button 

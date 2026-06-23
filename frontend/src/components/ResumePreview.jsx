@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Mail, Phone, MapPin, Globe, Award, Briefcase, GraduationCap, Code, ExternalLink, Smile, Play, List } from 'lucide-react';
 
 const GithubIcon = ({ size = 13, style = {} }) => (
@@ -747,14 +747,75 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
     document.body.setAttribute('data-theme', colorTheme);
   }, [colorTheme]);
 
+  const wrapperRef = useRef(null);
+  const childRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  const [containerHeight, setContainerHeight] = useState('auto');
+
+  useEffect(() => {
+    if (!wrapperRef.current || !childRef.current) return;
+    
+    const handleResize = () => {
+      if (!wrapperRef.current) return;
+      const containerWidth = wrapperRef.current.getBoundingClientRect().width;
+      const currentScale = containerWidth < 794 ? containerWidth / 794 : 1;
+      setScale(currentScale);
+      
+      const childHeight = childRef.current?.offsetHeight || 1123;
+      setContainerHeight(currentScale < 1 ? `${childHeight * currentScale}px` : 'auto');
+    };
+
+    handleResize();
+
+    const observer = new ResizeObserver(handleResize);
+    observer.observe(wrapperRef.current);
+    if (childRef.current) {
+      observer.observe(childRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   // Main router switch
-  switch (template) {
-    case 'modern':
-      return renderModernProfessionalTemplate();
-    case 'minimal':
-      return renderMinimalistSerifTemplate();
-    case 'slide':
-    default:
-      return renderCreativeSlideTemplate();
-  }
+  const previewContent = (() => {
+    switch (template) {
+      case 'modern':
+        return renderModernProfessionalTemplate();
+      case 'minimal':
+        return renderMinimalistSerifTemplate();
+      case 'slide':
+      default:
+        return renderCreativeSlideTemplate();
+    }
+  })();
+
+  return (
+    <div 
+      ref={wrapperRef} 
+      className="resume-preview-scaler-wrapper" 
+      style={{ 
+        width: '100%', 
+        overflow: 'hidden', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'flex-start',
+        height: containerHeight
+      }}
+    >
+      <div 
+        ref={childRef}
+        style={{
+          transform: scale < 1 ? `scale(${scale})` : 'none',
+          transformOrigin: 'top center',
+          width: '794px',
+          minWidth: '794px',
+          transition: 'transform var(--transition-normal)'
+        }}
+      >
+        {previewContent}
+      </div>
+    </div>
+  );
 }

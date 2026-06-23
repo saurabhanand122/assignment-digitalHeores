@@ -81,7 +81,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE, user
   );
 
   return (
-    <div className="animate-fade-in" style={{ padding: '3rem 2rem', position: 'relative', minHeight: '100vh', background: 'transparent', overflow: 'hidden' }}>
+    <div className="animate-fade-in dashboard-container" style={{ position: 'relative', minHeight: '100vh', background: 'transparent', overflow: 'hidden' }}>
       
       {/* Animated Floating Background Blobs */}
       <div className="blob-decor blob-primary animate-blob-1" style={{ top: '10%', left: '-5%', width: '400px', height: '400px', opacity: 0.12 }}></div>
@@ -292,7 +292,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE, user
         flexWrap: 'wrap'
       }}>
         {/* Search */}
-        <div style={{ position: 'relative', width: '350px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '350px' }}>
           <input 
             type="text" 
             placeholder="Search resumes by title or candidate..." 
@@ -404,7 +404,7 @@ export default function Dashboard({ onCreateNew, onEdit, onShare, API_BASE, user
         /* Populated Resumes Grid */
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: '2.5rem'
         }}>
           {filteredResumes.map((resume) => (

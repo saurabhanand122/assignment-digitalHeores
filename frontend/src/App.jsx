@@ -497,7 +497,7 @@ export default function App() {
       {isSignedIn && <AIChatbot API_BASE={API_BASE} />}
 
       {/* Global Footer */}
-      <Footer />
+      {currentScreen !== 'editor' && <Footer />}
     </div>
   );
 }

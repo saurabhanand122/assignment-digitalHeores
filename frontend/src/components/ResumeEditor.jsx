@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ResumePreview from './ResumePreview';
-import { ArrowLeft, Save, Printer, Plus, Trash2, ChevronDown, ChevronUp, AlertCircle, Share2, Award, Briefcase, GraduationCap, Link2, Smile, Play, List, Sparkles, CheckCircle, UploadCloud, FileText } from 'lucide-react';
+import { ArrowLeft, Save, Printer, Plus, Trash2, ChevronDown, ChevronUp, AlertCircle, Share2, Award, Briefcase, GraduationCap, Link2, Smile, Play, List, Sparkles, CheckCircle, UploadCloud, FileText, Code, FolderOpen } from 'lucide-react';
+
+const OPTIONAL_SECTIONS = [
+  { key: 'experience', label: 'Work Experience', icon: <Briefcase size={14} />, defaultVal: { role: '', company: '', location: '', startDate: '', endDate: '', description: '' } },
+  { key: 'education', label: 'Education', icon: <GraduationCap size={14} />, defaultVal: { degree: '', school: '', location: '', gradDate: '', score: '' } },
+  { key: 'projects', label: 'Key Projects', icon: <FolderOpen size={14} />, defaultVal: { title: '', role: '', technologies: '', description: '', link: '' } },
+  { key: 'skills', label: 'Skills & Expertise', icon: <Code size={14} />, defaultVal: { name: '', level: 3 } },
+  { key: 'certifications', label: 'Certifications', icon: <Award size={14} />, defaultVal: { title: '', issuer: '', date: '' } },
+  { key: 'achievements', label: 'Achievements', icon: <Award size={14} />, defaultVal: { text: '' } },
+  { key: 'links', label: 'Creative Links', icon: <Link2 size={14} />, defaultVal: { label: '', url: '', iconType: 'smiley' } }
+];
 
 export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
   const [formData, setFormData] = useState({
@@ -11,16 +21,16 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
     fontSizeScale: 12,
     spacingScale: 1.0,
     personal: {
-      fullName: '',
-      title: '',
-      email: '',
+      fullName: 'Saurabh Anand',
+      title: 'Full-Stack Developer & Architect',
+      email: 'saurabh.anand122@gmail.com',
       phone: '',
-      location: '',
-      website: '',
-      github: '',
-      linkedin: '',
+      location: 'Prayagraj, India',
+      website: 'https://my-portfolio-saurabh-anand.vercel.app/',
+      github: 'https://github.com/saurabhanand122',
+      linkedin: 'https://linkedin.com/in/saurabh-anand122',
       geeksforgeeks: '',
-      summary: ''
+      summary: `My journey into tech started with a simple question — "how does this actually work?" That curiosity led me deep into codebases, data structures, and building things from scratch. I'm a final-year B.Tech Computer Science student at United Institute of Technology, Prayagraj, I've been building real products ever since.\n\nI've shipped projects ranging from real-time communication tools to advanced AI-powered applications, such as a voice-based AI Mock Interview platform and an AI Learning Recommendation system. I don't just write code; I think about data flows, user experience, and clean architecture.\n\nI believe that great developers are digital craftspeople who blend technical precision with creative vision. Every project is an opportunity to push boundaries, challenge assumptions, and create something meaningful that stands the test of time.`
     },
     experience: [],
     education: [],
@@ -768,6 +778,10 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                     <option value="terracotta">Warm Terracotta & Navy</option>
                     <option value="emerald">Forest Emerald & Mustard</option>
                     <option value="indigo">Classic Indigo & Gold</option>
+                    <option value="sunset">Sunset Crimson & Amber</option>
+                    <option value="charcoal">Sleek Charcoal & Teal</option>
+                    <option value="lavender">Royal Lavender & Bronze</option>
+                    <option value="ocean">Deep Ocean & Coral</option>
                   </select>
                 </div>
 
@@ -921,7 +935,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                 </div>
                 <div className="form-group">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                    <label className="form-label" style={{ margin: 0 }}>Professional Summary</label>
+                    <label className="form-label" style={{ margin: 0 }}>About Me / Summary</label>
                     <button 
                       type="button"
                       disabled={enhancingField === 'summary'}
@@ -947,7 +961,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           </div>
 
           {/* Section 3: Work Experience */}
-          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--color-border)', display: formData.experience.length > 0 ? 'block' : 'none' }}>
             <div className="accordion-header" onClick={() => toggleSection('experience')}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>3. Work Experience ({formData.experience.length})</span>
               {expandedSection === 'experience' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -1045,7 +1059,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           </div>
 
           {/* Section 4: Education */}
-          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--color-border)', display: formData.education.length > 0 ? 'block' : 'none' }}>
             <div className="accordion-header" onClick={() => toggleSection('education')}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>4. Education ({formData.education.length})</span>
               {expandedSection === 'education' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -1091,7 +1105,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           </div>
 
           {/* Section 5: Projects */}
-          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--color-border)', display: formData.projects.length > 0 ? 'block' : 'none' }}>
             <div className="accordion-header" onClick={() => toggleSection('projects')}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>5. Key Projects ({formData.projects.length})</span>
               {expandedSection === 'projects' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -1150,7 +1164,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           </div>
 
           {/* Section 6: Skills */}
-          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--color-border)', display: formData.skills.length > 0 ? 'block' : 'none' }}>
             <div className="accordion-header" onClick={() => toggleSection('skills')}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>6. Skills & Expertise ({formData.skills.length})</span>
               {expandedSection === 'skills' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -1182,7 +1196,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           </div>
 
           {/* Section 7: Certifications */}
-          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--color-border)', display: formData.certifications.length > 0 ? 'block' : 'none' }}>
             <div className="accordion-header" onClick={() => toggleSection('certifications')}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>7. Certifications ({formData.certifications.length})</span>
               {expandedSection === 'certifications' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -1222,7 +1236,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           </div>
 
           {/* Section 8: Achievements */}
-          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--color-border)', display: (formData.achievements || []).length > 0 ? 'block' : 'none' }}>
             <div className="accordion-header" onClick={() => toggleSection('achievements')}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>8. Achievements ({formData.achievements?.length || 0})</span>
               {expandedSection === 'achievements' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -1263,7 +1277,7 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
           </div>
 
           {/* Section 9: Special PDF Resource Links */}
-          <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--color-border)', display: formData.links.length > 0 ? 'block' : 'none' }}>
             <div className="accordion-header" onClick={() => toggleSection('links')}>
               <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>9. Creative Blob Links ({formData.links.length})</span>
               {expandedSection === 'links' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -1355,6 +1369,74 @@ export default function ResumeEditor({ id, onBack, API_BASE, userId }) {
                 </button>
               </div>
             )}
+          </div>
+
+          {/* Add More Sections Bar */}
+          <div style={{
+            padding: '1.25rem',
+            margin: '1.25rem',
+            background: 'var(--color-card-bg)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md)',
+            boxShadow: 'var(--shadow-sm)'
+          }}>
+            <h4 style={{ 
+              fontSize: '0.8rem', 
+              fontWeight: 800, 
+              textTransform: 'uppercase', 
+              letterSpacing: '0.05em', 
+              color: 'var(--color-primary)',
+              marginBottom: '0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem'
+            }}>
+              <Plus size={14} style={{ color: 'var(--color-secondary)' }} /> Add More Sections
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {OPTIONAL_SECTIONS.map((sec) => {
+                const isAlreadyAdded = formData[sec.key] && formData[sec.key].length > 0;
+                if (isAlreadyAdded) return null;
+                
+                return (
+                  <button
+                    key={sec.key}
+                    onClick={() => {
+                      addArrayItem(sec.key, sec.defaultVal);
+                      toggleSection(sec.key);
+                    }}
+                    className="btn btn-outline"
+                    style={{
+                      justifyContent: 'flex-start',
+                      padding: '0.45rem 0.75rem',
+                      fontSize: '0.825rem',
+                      borderRadius: 'var(--radius-sm)',
+                      background: 'var(--color-card-bg)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text-dark)',
+                      transition: 'all 0.2s ease',
+                      width: '100%'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-primary)';
+                      e.currentTarget.style.background = 'rgba(27,67,96,0.03)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                      e.currentTarget.style.background = 'var(--color-card-bg)';
+                    }}
+                  >
+                    {sec.icon}
+                    <span style={{ marginLeft: '0.5rem' }}>{sec.label}</span>
+                  </button>
+                );
+              })}
+              {OPTIONAL_SECTIONS.every(sec => formData[sec.key] && formData[sec.key].length > 0) && (
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-success)', fontWeight: 600, margin: 0, textAlign: 'center' }}>
+                  All sections are active!
+                </p>
+              )}
+            </div>
           </div>
 
         </div>

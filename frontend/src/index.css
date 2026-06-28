@@ -647,3 +647,37 @@ body[data-site-theme="dark"] .form-input {
     max-width: 380px !important;
   }
 }
+
+/* Color Scheme overrides for resume-a4-page */
+.resume-a4-page[data-theme="default"] {
+  --color-primary: #1b4360;
+  --color-secondary: #e07a5f;
+}
+.resume-a4-page[data-theme="terracotta"] {
+  --color-primary: #e07a5f;
+  --color-secondary: #1b4360;
+}
+.resume-a4-page[data-theme="emerald"] {
+  --color-primary: #24453a;
+  --color-secondary: #cd8a4b;
+}
+.resume-a4-page[data-theme="indigo"] {
+  --color-primary: #3b429f;
+  --color-secondary: #d4af37;
+}
+.resume-a4-page[data-theme="sunset"] {
+  --color-primary: #d62828;
+  --color-secondary: #f77f00;
+}
+.resume-a4-page[data-theme="charcoal"] {
+  --color-primary: #2b2d42;
+  --color-secondary: #008080;
+}
+.resume-a4-page[data-theme="lavender"] {
+  --color-primary: #6247aa;
+  --color-secondary: #cd8a4b;
+}
+.resume-a4-page[data-theme="ocean"] {
+  --color-primary: #0077b6;
+  --color-secondary: #e07a5f;
+}

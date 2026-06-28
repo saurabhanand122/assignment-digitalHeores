@@ -50,7 +50,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
   // --- 1. PDF INSPIRED "CREATIVE" TEMPLATE (A4 SHEET) ---
   const renderCreativeSlideTemplate = () => {
     return (
-      <div className="resume-a4-page animate-fade-in" style={{
+      <div className="resume-a4-page animate-fade-in" data-theme={colorTheme} style={{
         background: '#ffffff',
         boxShadow: 'var(--shadow-lg)',
         border: '1px solid var(--color-border)',
@@ -314,7 +314,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
   // --- 2. MODERN PROFESSIONAL TWO-COLUMN TEMPLATE ---
   const renderModernProfessionalTemplate = () => {
     return (
-      <div className="resume-a4-page" style={{
+      <div className="resume-a4-page" data-theme={colorTheme} style={{
         background: '#ffffff',
         color: '#1e293b',
         borderRadius: 'var(--radius-md)',
@@ -515,7 +515,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
     };
 
     return (
-      <div className="resume-a4-page" style={{
+      <div className="resume-a4-page" data-theme={colorTheme} style={{
         background: '#ffffff',
         color: '#1a1a1a',
         fontFamily: 'var(--font-serif), "Times New Roman", Times, Georgia, serif',
@@ -742,10 +742,7 @@ export default function ResumePreview({ data, activeSlide = 0, isInteractive = f
     );
   };
 
-  // Theme data attributes injection for stylesheets
-  useEffect(() => {
-    document.body.setAttribute('data-theme', colorTheme);
-  }, [colorTheme]);
+  // Theme data attributes are applied directly in JSX elements to prevent global pollution
 
   const wrapperRef = useRef(null);
   const childRef = useRef(null);
